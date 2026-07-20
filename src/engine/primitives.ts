@@ -291,8 +291,11 @@ function avatar(kind: 'worker' | 'inspector' | 'office' | 'person'): SVGGElement
     );
   } else if (kind === 'inspector') {
     parts.push(
-      path('M -19 -52 h 30 l 7 4 h -37 Z', { fill: '#2b6be0' }), // cap
-      path('M -19 -52 C -19 -64 15 -64 15 -52 Z', { fill: '#2b6be0', stroke: '#00000022', 'stroke-width': 1.5 }),
+      // white construction safety helmet (dome + brim + ridge)
+      rect({ x: -24, y: -51, width: 48, height: 6, rx: 3, fill: '#e4e8ef', stroke: '#00000022', 'stroke-width': 1 }), // brim
+      path('M -20 -49 C -20 -68 20 -68 20 -49 Z', { fill: '#f4f6fa', stroke: '#00000022', 'stroke-width': 1.5 }), // dome
+      path('M 0 -67 C -9 -66 -15 -60 -17 -50', { fill: 'none', stroke: '#cdd3dd', 'stroke-width': 2, 'stroke-linecap': 'round' }), // ridge shade
+      rect({ x: -3, y: -66, width: 6, height: 9, rx: 2, fill: '#cdd3dd' }), // crown knob
       rect({ x: 20, y: -6, width: 20, height: 26, rx: 3, fill: THEME.paper, stroke: THEME.paperShade, 'stroke-width': 1.5 }), // clipboard
       rect({ x: 26, y: -10, width: 8, height: 6, rx: 2, fill: '#9aa' }),
       ...[0, 6, 12].map((y) => line(24, y, 36, y, { stroke: THEME.textDim, 'stroke-width': 1.5 })),
@@ -672,27 +675,40 @@ export function calloutCard(
   agents: Array<{ name: string; icon: string }> = [],
   accent: string = THEME.cyan,
 ): { node: SVGGElement; width: number; height: number } {
-  const W = 190, pad = 12, btnH = 36, btnGap = 9;
+  const W = 190, pad = 12, btnGap = 9, lineH = 15, textX = 50;
   const headBottom = sub ? 46 : 32;      // clear separation below the title
   const startY = headBottom + 4;
-  const height = startY + agents.length * (btnH + btnGap) - btnGap + pad;
+  // wrap each "<name> Agent" label to the button's text column; taller buttons
+  // when a label needs two lines so nothing overflows.
+  const maxChars = Math.max(8, Math.floor((W - textX - pad) / 6.6));
+  const wrapped = agents.map((a) => wrapText(`${a.name} Agent`, maxChars));
+  const btnHeights = wrapped.map((lines) => Math.max(34, 12 + lines.length * lineH));
+  const height = startY + btnHeights.reduce((s, h) => s + h + btnGap, 0) - btnGap + pad;
+
   const body: SVGElement[] = [
     rect({ x: 0, y: 0, width: W, height, rx: 12, fill: '#160a2cf2', stroke: accent, 'stroke-opacity': 0.55, 'stroke-width': 1.5 }),
     rect({ x: 0, y: 0, width: 4, height, rx: 2, fill: accent }),
     text(title, { x: pad, y: 22, fill: THEME.text, 'font-size': 14, 'font-weight': 800, 'letter-spacing': 1 }),
   ];
   if (sub) body.push(text(sub, { x: pad, y: 38, fill: THEME.textDim, 'font-size': 12 }));
+
+  let by = startY;
   agents.forEach((a, i) => {
-    const by = startY + i * (btnH + btnGap);
-    const cy = by + btnH / 2;
+    const lines = wrapped[i];
+    const bh = btnHeights[i];
+    const cy = by + bh / 2;
     const iconFn = ICONS[a.icon] ?? (() => circle(0, 0, 6, { fill: accent }));
-    // each agent is its own clearly-styled button with a prominent icon disc
+    const firstBaseline = cy - ((lines.length - 1) * lineH) / 2 + 4.5;
+    const lineEls = lines.map((ln, li) =>
+      text(ln, { x: textX, y: firstBaseline + li * lineH, fill: THEME.text, 'font-size': 12.5, 'font-weight': 600 }),
+    );
     body.push(g({ class: 'af-agent', 'data-agent': i, role: 'button', tabindex: 0, 'aria-label': `${a.name} Agent` }, [
-      rect({ class: 'af-agent-btn', x: 8, y: by, width: W - 16, height: btnH, rx: 9, fill: '#ffffff12', stroke: accent, 'stroke-opacity': 0.4, 'stroke-width': 1 }),
+      rect({ class: 'af-agent-btn', x: 8, y: by, width: W - 16, height: bh, rx: 9, fill: '#ffffff12', stroke: accent, 'stroke-opacity': 0.4, 'stroke-width': 1 }),
       circle(27, cy, 14, { fill: '#0c0620', stroke: accent, 'stroke-opacity': 0.65, 'stroke-width': 1.3 }),
       g({ transform: transform({ x: 27, y: cy, scale: 0.66 }) }, [iconFn()]),
-      text(`${a.name} Agent`, { x: 50, y: cy + 4.5, fill: THEME.text, 'font-size': 12.5, 'font-weight': 600 }),
+      ...lineEls,
     ]));
+    by += bh + btnGap;
   });
   return { node: g({ 'data-furniture': 'callout', class: 'af-callout', filter: 'url(#af-shadow)' }, body), width: W, height };
 }
