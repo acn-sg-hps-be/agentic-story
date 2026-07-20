@@ -62,9 +62,9 @@
   ],
 
   "outputs": [
-    { "id": "issue", "label": "Autodesk Issue", "icon": "ticket", "fromState": "assured", "description": "A typed, linked issue created on the Autodesk platform for project tracking and follow-up." },
-    { "id": "document", "label": "ISO 19650 Document", "icon": "card", "fromState": "assured", "description": "Attachments archived in the correct folder with ISO 19650-compliant names and full metadata." },
-    { "id": "decision", "label": "Decision Record", "icon": "shield", "fromState": "assured", "description": "The email thread indexed in SharePoint as an ISO 19650 decision record — traceable and queryable by Copilot." }
+    { "id": "issue", "label": "Automated Ticketing", "icon": "ticket", "fromState": "assured", "description": "A typed, linked issue created on the Autodesk platform for project tracking and follow-up." },
+    { "id": "document", "label": "Compliant Archiving", "icon": "card", "fromState": "assured", "description": "Attachments archived in the correct folder with ISO 19650-compliant names and full metadata." },
+    { "id": "decision", "label": "Decision Traceability", "icon": "shield", "fromState": "assured", "description": "The email thread indexed in SharePoint as an ISO 19650 decision record — traceable and queryable by Copilot." }
   ],
 
   "plots": [
