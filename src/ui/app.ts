@@ -25,8 +25,27 @@ export async function createApp(mount: HTMLElement): Promise<void> {
 
   const stageWrap = div('af-stage-wrap');
   const caption = div('af-caption');
+  const outcomesBar = div('af-outcomes');
+  outcomesBar.style.display = 'none';
   const controls = div('af-controls');
-  root.append(stageWrap, caption, controls, brandBar());
+  root.append(stageWrap, caption, outcomesBar, controls, brandBar());
+
+  const showOutcomes = (list: Array<{ title: string; desc: string }>) => {
+    const header = div('af-outcomes-title');
+    header.textContent = 'Outcomes';
+    const row = div('af-outcomes-row');
+    for (const o of list) {
+      const card = div('af-outcome-card');
+      const badge = div('af-outcome-badge'); badge.textContent = '✓';
+      const t = div('af-outcome-title'); t.textContent = o.title;
+      const d = div('af-outcome-desc'); d.textContent = o.desc;
+      card.append(badge, t, d);
+      row.appendChild(card);
+    }
+    outcomesBar.replaceChildren(header, row);
+    outcomesBar.style.display = 'flex';
+  };
+  const hideOutcomes = () => { outcomesBar.style.display = 'none'; outcomesBar.replaceChildren(); };
 
   const modal = createModal(root, () => {/* stay paused */});
 
@@ -125,10 +144,27 @@ export async function createApp(mount: HTMLElement): Promise<void> {
     });
     stageWrap.replaceChildren(scene.svg);
 
+    // final executive "outcomes" set: one card per output-emit step
+    const lastIndex = plot.steps.length - 1;
+    const outcomes = plot.steps
+      .filter((s) => s.type === 'output-emit')
+      .map((s) => {
+        const out = scenario.outputs.find((o) => o.id === s.ref);
+        return { title: out?.value ?? out?.label ?? s.ref, desc: s.caption };
+      });
+
     runner = new PlotRunner(scenario, plot, scene, {
-      onStepChange: (_i, step) => {
-        caption.textContent = step.caption;
-        caption.classList.remove('af-cap-in'); void caption.offsetWidth; caption.classList.add('af-cap-in');
+      onStepChange: (i, step) => {
+        if (i === lastIndex && outcomes.length) {
+          // final step: swap the subtitle for the outcomes bar (all cards)
+          caption.style.display = 'none';
+          showOutcomes(outcomes);
+        } else {
+          hideOutcomes();
+          caption.style.display = '';
+          caption.textContent = step.caption;
+          caption.classList.remove('af-cap-in'); void caption.offsetWidth; caption.classList.add('af-cap-in');
+        }
       },
       onPopup: (popup) => applyPopup(popup),
       onPlayState: (playing) => { btnPlay.textContent = playing ? '❚❚' : '▶'; },

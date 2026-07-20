@@ -150,6 +150,31 @@ svg text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 .af-cap-in { animation: af-fade-up 0.4s ease; }
 @keyframes af-fade-up { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
+/* Final outcomes bar (executive value cards; replaces the caption on the last step) */
+.af-outcomes {
+  --s: var(--af-scale, 1);
+  position: absolute; left: 50%; bottom: max(84px, calc(52px * var(--s))); transform: translateX(-50%);
+  z-index: 6; display: none; flex-direction: column; align-items: center;
+  gap: calc(10px * var(--s)); max-width: 94%; pointer-events: none;
+}
+.af-outcomes-title {
+  font-size: calc(13px * var(--s)); letter-spacing: 3px; text-transform: uppercase;
+  color: #00e6a8; font-weight: 800; text-shadow: 0 1px 6px #000;
+}
+.af-outcomes-row { display: flex; gap: calc(14px * var(--s)); justify-content: center; flex-wrap: wrap; }
+.af-outcome-card {
+  width: calc(240px * var(--s)); background: rgba(11, 6, 24, 0.88); border: 1px solid #00e6a866;
+  border-radius: calc(14px * var(--s)); padding: calc(16px * var(--s)) calc(16px * var(--s)) calc(18px * var(--s));
+  text-align: center; box-shadow: 0 10px 34px #0008;
+}
+.af-outcome-badge {
+  width: calc(42px * var(--s)); height: calc(42px * var(--s)); margin: 0 auto calc(10px * var(--s));
+  border-radius: 50%; background: #00e6a82e; border: 2px solid #00e6a8; color: #00e6a8;
+  display: grid; place-items: center; font-size: calc(22px * var(--s)); font-weight: 900;
+}
+.af-outcome-title { font-size: calc(18px * var(--s)); font-weight: 800; color: var(--af-text); margin-bottom: calc(5px * var(--s)); line-height: 1.25; }
+.af-outcome-desc { font-size: calc(13.5px * var(--s)); line-height: 1.4; color: var(--af-text-dim); }
+
 /* Controls bar */
 .af-controls {
   position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);

@@ -62,6 +62,8 @@ export interface OutputNode {
   icon: string;
   description: string;
   media?: string;
+  /** Optional punchy value headline for the final outcomes bar; else label. */
+  value?: string;
   /** Object state the emitted output is shown in. */
   fromState: string;
 }
