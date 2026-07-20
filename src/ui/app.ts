@@ -32,7 +32,7 @@ export async function createApp(mount: HTMLElement): Promise<void> {
 
   const showOutcomes = (list: Array<{ title: string; desc: string }>) => {
     const header = div('af-outcomes-title');
-    header.textContent = 'Outcomes';
+    header.textContent = 'Value Delivered';
     const row = div('af-outcomes-row');
     for (const o of list) {
       const card = div('af-outcome-card');

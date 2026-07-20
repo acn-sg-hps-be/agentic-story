@@ -59,11 +59,6 @@ export function createModal(host: HTMLElement, onClose?: () => void): ModalContr
       closeBtn.addEventListener('click', () => controller.close());
       dialog.appendChild(closeBtn);
 
-      const mediaBox = document.createElement('div');
-      mediaBox.className = 'af-modal-media';
-      mediaBox.appendChild(buildMedia(content.media));
-      dialog.appendChild(mediaBox);
-
       const body = document.createElement('div');
       body.className = 'af-modal-body';
       if (content.subtitle) {
@@ -89,6 +84,12 @@ export function createModal(host: HTMLElement, onClose?: () => void): ModalContr
       if (content.inputFormat) labelledLine('af-modal-input', 'Input', content.inputFormat);
       if (content.output) labelledLine('af-modal-output', 'Output', content.output);
       dialog.appendChild(body);
+
+      // media below the text
+      const mediaBox = document.createElement('div');
+      mediaBox.className = 'af-modal-media';
+      mediaBox.appendChild(buildMedia(content.media));
+      dialog.appendChild(mediaBox);
 
       overlay.hidden = false;
       open = true;
