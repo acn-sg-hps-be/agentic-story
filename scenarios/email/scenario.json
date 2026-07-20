@@ -1,0 +1,84 @@
+{
+  "id": "email",
+  "title": "Email → Governed Project Data",
+  "subtitle": "Demo 1 · inbound email, integrated to Forma",
+
+  "objectStates": {
+    "raw":        { "base": "envelope" },
+    "tagged":     { "base": "envelope", "badges": ["tags"] },
+    "ticket":     { "base": "card", "badges": ["tags"] },
+    "structured": { "base": "card", "badges": ["tags", "rename"] },
+    "assured":    { "base": "card", "badges": ["tags", "rename", "stamp-green"] }
+  },
+
+  "inputs": [
+    {
+      "id": "email1",
+      "label": "Incoming email",
+      "icon": "envelope",
+      "description": "A vague email with a generically-named attachment lands in the shared project inbox.",
+      "inputFormat": "An email with a free-text body and a PDF/CAD attachment.",
+      "startsAs": "raw",
+      "persona": {
+        "role": "Document Controller",
+        "quote": "Every attachment arrives as 'final_v3.pdf' — I rename and re-file dozens by hand every day.",
+        "avatar": "office"
+      }
+    }
+  ],
+
+  "stations": [
+    {
+      "id": "capture", "label": "CAPTURE", "transformTo": "raw",
+      "description": "Ingests and validates the incoming item.",
+      "agents": [
+        { "name": "Review", "icon": "eye", "description": "Validates the source and confirms a live project.", "output": "A verified item bound to the right project." }
+      ]
+    },
+    {
+      "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged",
+      "description": "Reads the content and classifies it.",
+      "agents": [
+        { "name": "Vision", "icon": "eye", "description": "Reads the attachment, including scanned pages.", "output": "Extracted text and detected document type." },
+        { "name": "Classification", "icon": "tag", "description": "Assigns discipline, location and type.", "output": "A tagged item: discipline, location, type." }
+      ]
+    },
+    {
+      "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
+      "description": "Creates a structured record with a compliant name.",
+      "agents": [
+        { "name": "Ticketing", "icon": "ticket", "description": "Creates a typed record from the content.", "output": "A structured, typed record." },
+        { "name": "Naming", "icon": "rename", "description": "Builds an ISO 19650-compliant name.", "output": "A compliant file name (Originator-Discipline-Location-…)." }
+      ]
+    },
+    {
+      "id": "assure", "label": "ASSURE", "transformTo": "assured",
+      "description": "Runs the final compliance checks before anything is written.",
+      "agents": [
+        { "name": "Data QA", "icon": "check", "description": "Confirms all required fields are present.", "output": "A completeness pass / fail with reasons." },
+        { "name": "Compliance", "icon": "shield", "description": "Verifies the name conforms to the standard.", "output": "A CONFORMING record, ready to write to Forma." }
+      ]
+    }
+  ],
+
+  "outputs": [
+    { "id": "issue", "label": "Typed Issue", "icon": "ticket", "fromState": "assured", "description": "A correctly-typed issue created in Autodesk Forma." },
+    { "id": "document", "label": "Filed Document", "icon": "card", "fromState": "assured", "description": "The attachment, archived under a compliant name and linked to its issue." }
+  ],
+
+  "plots": [
+    {
+      "id": "main", "name": "Email → Issue + Document",
+      "steps": [
+        { "type": "actor-intro", "ref": "email1", "caption": "A document controller is drowning in manual renaming and filing.", "dwell": 3800 },
+        { "type": "input-appear", "ref": "email1", "caption": "An email arrives — vague body, generic attachment name.", "dwell": 2800 },
+        { "type": "move-to", "ref": "capture", "caption": "The Review Agent ingests and validates the item.", "dwell": 2600 },
+        { "type": "process", "ref": "understand", "caption": "The Classification Agent reads the content: discipline, location, type.", "dwell": 3000 },
+        { "type": "process", "ref": "structure", "caption": "The Ticketing and Naming Agents build a structured, compliantly-named record.", "dwell": 3000 },
+        { "type": "process", "ref": "assure", "caption": "The Compliance Agent verifies naming and required fields.", "dwell": 3000 },
+        { "type": "output-emit", "ref": "issue", "caption": "A governed, conforming Issue is created in Forma.", "dwell": 3000 },
+        { "type": "output-emit", "ref": "document", "caption": "And the attachment is filed as a compliant, linked document.", "dwell": 4000 }
+      ]
+    }
+  ]
+}

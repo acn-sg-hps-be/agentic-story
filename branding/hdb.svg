@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 64">
+  <!-- PLACEHOLDER HDB wordmark — replace with the official HDB logo file (same path). -->
+  <rect x="1" y="10" width="70" height="44" rx="8" fill="#0a7cc4"/>
+  <text x="36" y="42" fill="#fff" font-family="system-ui, Arial, sans-serif" font-size="26" font-weight="800" text-anchor="middle" letter-spacing="1">HDB</text>
+  <text x="80" y="30" fill="#e9e0ff" font-family="system-ui, Arial, sans-serif" font-size="12" font-weight="700">Housing &amp;</text>
+  <text x="80" y="46" fill="#e9e0ff" font-family="system-ui, Arial, sans-serif" font-size="12" font-weight="700">Development Board</text>
+</svg>
