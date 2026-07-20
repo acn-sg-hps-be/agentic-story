@@ -688,9 +688,9 @@ export function calloutCard(
   const body: SVGElement[] = [
     rect({ x: 0, y: 0, width: W, height, rx: 12, fill: '#160a2cf2', stroke: accent, 'stroke-opacity': 0.55, 'stroke-width': 1.5 }),
     rect({ x: 0, y: 0, width: 4, height, rx: 2, fill: accent }),
-    text(title, { x: pad, y: 22, fill: THEME.text, 'font-size': 14, 'font-weight': 800, 'letter-spacing': 1 }),
+    text(title, { x: W / 2, y: 22, fill: THEME.text, 'font-size': 14, 'font-weight': 800, 'letter-spacing': 1, 'text-anchor': 'middle' }),
   ];
-  if (sub) body.push(text(sub, { x: pad, y: 38, fill: THEME.textDim, 'font-size': 12 }));
+  if (sub) body.push(text(sub, { x: W / 2, y: 38, fill: THEME.textDim, 'font-size': 12, 'text-anchor': 'middle' }));
 
   let by = startY;
   agents.forEach((a, i) => {
