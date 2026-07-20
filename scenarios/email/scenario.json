@@ -1,7 +1,7 @@
 {
   "id": "email",
-  "title": "Email → Governed Project Data",
-  "subtitle": "Demo 1 · inbound email, integrated to Forma",
+  "title": "Email → Ticket + ISO 19650",
+  "subtitle": "Demo 1 · HDB · Autodesk Forma",
 
   "objectStates": {
     "raw":        { "base": "envelope" },
@@ -14,14 +14,14 @@
   "inputs": [
     {
       "id": "email1",
-      "label": "Incoming email",
+      "label": "Incoming Emails",
       "icon": "envelope",
-      "description": "A vague email with a generically-named attachment lands in the shared project inbox.",
-      "inputFormat": "An email with a free-text body and a PDF/CAD attachment.",
+      "description": "Emails from consultants, contractors, and project authorities — each with a different format, attachment type, and level of detail — land in the shared project inbox.",
+      "inputFormat": "Emails with varied free-text bodies and mixed attachment types (PDF, CAD, scanned documents).",
       "startsAs": "raw",
       "persona": {
-        "role": "Document Controller",
-        "quote": "Every attachment arrives as 'final_v3.pdf' — I rename and re-file dozens by hand every day.",
+        "role": "HDB Project Manager",
+        "quote": "I get dozens of emails a week from different consultants — tracking which ones need a ticket and making sure attachments are filed correctly takes half my day.",
         "avatar": "office"
       }
     }
@@ -30,54 +30,56 @@
   "stations": [
     {
       "id": "capture", "label": "CAPTURE", "transformTo": "raw",
-      "description": "Ingests and validates the incoming item.",
+      "description": "Ingests each email and confirms it belongs to an active project.",
       "agents": [
-        { "name": "Review", "icon": "eye", "description": "Validates the source and confirms a live project.", "output": "A verified item bound to the right project." }
+        { "name": "Email Review", "icon": "eye", "description": "Analyses the email content, validates the sender, and confirms the active project context.", "output": "A verified email bound to the right project." }
       ]
     },
     {
       "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged",
-      "description": "Reads the content and classifies it.",
+      "description": "Classifies the content, extracts attachment metadata, and retrieves the project's ISO 19650 taxonomy.",
       "agents": [
-        { "name": "Vision", "icon": "eye", "description": "Reads the attachment, including scanned pages.", "output": "Extracted text and detected document type." },
-        { "name": "Classification", "icon": "tag", "description": "Assigns discipline, location and type.", "output": "A tagged item: discipline, location, type." }
+        { "name": "Content Extraction", "icon": "eye", "description": "Reads all attachments across mixed file formats — PDF, CAD, scanned documents — and extracts the raw content for further processing.", "output": "Extracted text and data from all attachments, ready for classification." },
+        { "name": "SGBuildex", "icon": "link", "description": "Queries the SGBuildex API to retrieve the HDB-specific ISO 19650 document naming convention and folder taxonomy for this project.", "output": "The applicable ISO 19650 taxonomy: naming template, folder path, and required metadata columns." },
+        { "name": "Classification", "icon": "tag", "description": "Classifies the document type, engineering discipline, and project location using the extracted content and ISO 19650 taxonomy.", "output": "A tagged item: document type, discipline, location." }
       ]
     },
     {
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
-      "description": "Creates a structured record with a compliant name.",
+      "description": "Creates a tracked issue in Autodesk and files attachments to the ISO 19650 standard.",
       "agents": [
-        { "name": "Ticketing", "icon": "ticket", "description": "Creates a typed record from the content.", "output": "A structured, typed record." },
-        { "name": "Naming", "icon": "rename", "description": "Builds an ISO 19650-compliant name.", "output": "A compliant file name (Originator-Discipline-Location-…)." }
+        { "name": "Ticketing", "icon": "ticket", "description": "Creates a typed Autodesk Issue from the email, linked to the relevant project element and assignee.", "output": "An Autodesk Issue with type, discipline, description, and project linkage." },
+        { "name": "Document Archival", "icon": "rename", "description": "Files each attachment into the correct folder with an ISO 19650-compliant name and all required metadata columns, following the taxonomy retrieved from SGBuildex.", "output": "Attachments archived under compliant names, in the correct folder, with full metadata." }
       ]
     },
     {
-      "id": "assure", "label": "ASSURE", "transformTo": "assured",
-      "description": "Runs the final compliance checks before anything is written.",
+      "id": "govern", "label": "GOVERN", "transformTo": "assured",
+      "description": "Archives the email thread as a traceable decision record in the project's Common Data Environment.",
       "agents": [
-        { "name": "Data QA", "icon": "check", "description": "Confirms all required fields are present.", "output": "A completeness pass / fail with reasons." },
-        { "name": "Compliance", "icon": "shield", "description": "Verifies the name conforms to the standard.", "output": "A CONFORMING record, ready to write to Forma." }
+        { "name": "Decision Record", "icon": "shield", "description": "Archives the email thread into a SharePoint document library as an ISO 19650 decision record — capturing who decided what, when, and based on which documents. Indexed for Copilot Agent to interrogate the project's decision trail.", "output": "An ISO 19650 decision record in SharePoint: email thread, linked documents, and decision context — queryable by Copilot for decision tracking and audit." }
       ]
     }
   ],
 
   "outputs": [
-    { "id": "issue", "label": "Typed Issue", "icon": "ticket", "fromState": "assured", "description": "A correctly-typed issue created in Autodesk Forma." },
-    { "id": "document", "label": "Filed Document", "icon": "card", "fromState": "assured", "description": "The attachment, archived under a compliant name and linked to its issue." }
+    { "id": "issue", "label": "Automated Ticketing", "icon": "ticket", "fromState": "assured", "description": "A typed, linked issue created on the Autodesk platform for project tracking and follow-up." },
+    { "id": "document", "label": "Compliant Archiving", "icon": "card", "fromState": "assured", "description": "Attachments archived in the correct folder with ISO 19650-compliant names and full metadata." },
+    { "id": "decision", "label": "Decision Traceability", "icon": "shield", "fromState": "assured", "description": "The email thread indexed in SharePoint as an ISO 19650 decision record — traceable and queryable by Copilot." }
   ],
 
   "plots": [
     {
-      "id": "main", "name": "Email → Issue + Document",
+      "id": "main", "name": "Email → Ticket + ISO 19650",
       "steps": [
-        { "type": "actor-intro", "ref": "email1", "caption": "A document controller is drowning in manual renaming and filing.", "dwell": 3800 },
-        { "type": "input-appear", "ref": "email1", "caption": "An email arrives — vague body, generic attachment name.", "dwell": 2800 },
-        { "type": "move-to", "ref": "capture", "caption": "The Review Agent ingests and validates the item.", "dwell": 2600 },
-        { "type": "process", "ref": "understand", "caption": "The Classification Agent reads the content: discipline, location, type.", "dwell": 3000 },
-        { "type": "process", "ref": "structure", "caption": "The Ticketing and Naming Agents build a structured, compliantly-named record.", "dwell": 3000 },
-        { "type": "process", "ref": "assure", "caption": "The Compliance Agent verifies naming and required fields.", "dwell": 3000 },
-        { "type": "output-emit", "ref": "issue", "caption": "A governed, conforming Issue is created in Forma.", "dwell": 3000 },
-        { "type": "output-emit", "ref": "document", "caption": "And the attachment is filed as a compliant, linked document.", "dwell": 4000 }
+        { "type": "actor-intro", "ref": "email1", "caption": "An HDB project manager tracks dozens of emails a week — manual triage, renaming, and filing consume half their day.", "dwell": 3800 },
+        { "type": "input-appear", "ref": "email1", "caption": "Emails arrive from multiple stakeholders — varied formats, attachment types, and levels of detail.", "dwell": 2800 },
+        { "type": "move-to", "ref": "capture", "caption": "The Email Review Agent ingests each email and confirms project context.", "dwell": 2600 },
+        { "type": "process", "ref": "understand", "caption": "Classification, Document Analysis, and SGBuildex Agents tag the content and retrieve the ISO 19650 taxonomy.", "dwell": 3400 },
+        { "type": "process", "ref": "structure", "caption": "The Ticketing Agent raises an Autodesk Issue; the Document Archival Agent files attachments to spec.", "dwell": 3200 },
+        { "type": "process", "ref": "govern", "caption": "The Decision Record Agent archives the email thread to SharePoint as an ISO 19650 decision record.", "dwell": 3200 },
+        { "type": "output-emit", "ref": "issue", "caption": "A typed Autodesk Issue is created and linked to the project.", "dwell": 2800 },
+        { "type": "output-emit", "ref": "document", "caption": "Attachments are filed under ISO 19650-compliant names with full metadata.", "dwell": 3000 },
+        { "type": "output-emit", "ref": "decision", "caption": "The email thread is preserved as a decision record — Copilot can now trace who decided what and why.", "dwell": 4200 }
       ]
     }
   ]

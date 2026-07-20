@@ -1,6 +1,6 @@
 {
   "scenarios": [
-    { "id": "whatsapp", "title": "WhatsApp → Safety Observation", "path": "scenarios/whatsapp/scenario.json" },
-    { "id": "email", "title": "Email → Governed Project Data", "path": "scenarios/email/scenario.json" }
+    { "id": "email", "title": "Email → Ticket + ISO 19650", "path": "scenarios/email/scenario.json" },
+    { "id": "whatsapp", "title": "WhatsApp → Safety Observation", "path": "scenarios/whatsapp/scenario.json" }
   ]
 }

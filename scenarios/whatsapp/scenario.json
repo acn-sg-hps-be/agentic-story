@@ -1,26 +1,26 @@
 {
   "id": "whatsapp",
   "title": "WhatsApp → Safety Observation",
-  "subtitle": "Demo 2 · site message, integrated to Forma",
+  "subtitle": "Demo 2 · site screenshots, integrated to Forma",
 
   "objectStates": {
-    "raw-chat":    { "base": "chat" },
-    "chat-tagged": { "base": "chat", "badges": ["tags"] },
-    "structured":  { "base": "card", "badges": ["tags", "rename"] },
-    "assured":     { "base": "card", "badges": ["tags", "rename", "stamp-green"] }
+    "raw-shot":   { "base": "photo" },
+    "tagged-shot":{ "base": "photo", "badges": ["tags"] },
+    "structured": { "base": "card", "badges": ["tags", "rename"] },
+    "governed":   { "base": "card", "badges": ["tags", "rename", "stamp-green"] }
   },
 
   "inputs": [
     {
       "id": "chat1",
-      "label": "WhatsApp message",
-      "icon": "chat",
-      "description": "A short, unstructured hazard note sent from site through a messaging channel.",
-      "inputFormat": "A free-text chat message, optionally with a site photo attached.",
-      "startsAs": "raw-chat",
+      "label": "WhatsApp Screenshots",
+      "icon": "photo",
+      "description": "Screenshots from a site WhatsApp group — containing chat messages, on-site photos, and informal hazard discussions captured by the team.",
+      "inputFormat": "One or more screenshot images containing a mix of chat text and embedded site photos.",
+      "startsAs": "raw-shot",
       "persona": {
-        "role": "Site Foreman",
-        "quote": "I fire off a quick message from site — someone in the office still has to turn it into a proper safety record.",
+        "role": "Site Safety Engineer",
+        "quote": "The team flags hazards in our site chat group — I screenshot the thread and turn it into a proper safety record before anything gets missed.",
         "avatar": "inspector"
       }
     }
@@ -28,53 +28,55 @@
 
   "stations": [
     {
-      "id": "capture", "label": "CAPTURE", "transformTo": "raw-chat",
-      "description": "Pulls the message from its channel and confirms project context.",
+      "id": "capture", "label": "CAPTURE", "transformTo": "raw-shot",
+      "description": "Reads the screenshots and separates the conversation text from the embedded site photos.",
       "agents": [
-        { "name": "Review", "icon": "eye", "description": "Captures the message and confirms project context.", "output": "A verified message tied to the right project." }
+        { "name": "Conversation Summary", "icon": "eye", "description": "Reads the WhatsApp screenshots, extracts the chat thread, and produces a concise summary of the reported issue and its context.", "output": "A structured conversation summary: reported issue, location, time, and involved parties." },
+        { "name": "Image Analysis", "icon": "eye", "description": "Applies computer vision to the extracted site photos to identify hazard objects, unsafe conditions, and relevant scene details.", "output": "Detected hazard objects and conditions identified in the photos." }
       ]
     },
     {
-      "id": "understand", "label": "UNDERSTAND", "transformTo": "chat-tagged",
-      "description": "Interprets the note and classifies the hazard.",
+      "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged-shot",
+      "description": "Retrieves the official hazard taxonomy and assigns the correct category to the identified hazard.",
       "agents": [
-        { "name": "Vision", "icon": "eye", "description": "Reads any attached photo and recognises the hazard.", "output": "A recognised hazard with severity." },
-        { "name": "Classification", "icon": "tag", "description": "Extracts discipline, location and observation type.", "output": "A tagged observation: type, location, severity." }
+        { "name": "SGBuildex", "icon": "link", "description": "Queries the SGBuildex API to retrieve the official hazard categories and safety observation taxonomy applicable to this project.", "output": "The applicable hazard taxonomy: category list, severity levels, and required fields." },
+        { "name": "Hazard Identification", "icon": "tag", "description": "Maps the hazard objects detected by Image Analysis to the correct official category from the SGBuildex taxonomy.", "output": "A classified hazard: official category, severity, and description." }
       ]
     },
     {
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
-      "description": "Turns the understood note into a structured observation.",
+      "description": "Creates the safety observation form in Autodesk and attaches the photo evidence.",
       "agents": [
-        { "name": "Ticketing", "icon": "ticket", "description": "Creates a structured observation record.", "output": "A structured safety-observation record." },
-        { "name": "Naming", "icon": "rename", "description": "Applies the enforced reference format.", "output": "A compliant observation reference." }
+        { "name": "Form", "icon": "ticket", "description": "Creates and populates the Autodesk Forms safety observation record, using the conversation summary and classified hazard data. The form can be reviewed in Claude Chat or auto-submitted.", "output": "A completed safety observation form in Autodesk, ready for review or submission." },
+        { "name": "Relationship", "icon": "link", "description": "Attaches the site photo to the form as evidence, with proper metadata linkage to keep the record traceable.", "output": "Photo attached to the observation form with metadata relationship." }
       ]
     },
     {
-      "id": "assure", "label": "ASSURE", "transformTo": "assured",
-      "description": "Runs the final checks before it is written to Forma.",
+      "id": "govern", "label": "GOVERN", "transformTo": "governed",
+      "description": "Triggers the data pipeline to refresh the management Power BI dashboard with the latest safety statistics.",
       "agents": [
-        { "name": "Data QA", "icon": "check", "description": "Confirms the observation is complete.", "output": "A completeness pass with any gaps flagged." },
-        { "name": "Compliance", "icon": "shield", "description": "Confirms it conforms before hand-off.", "output": "A CONFORMING observation, ready for Forma." }
+        { "name": "Dashboard", "icon": "check", "description": "Triggers the downstream data pipeline to refresh the Power BI safety dashboard, ensuring management sees up-to-date site observation statistics and trends.", "output": "Power BI dashboard refreshed — latest safety observation counts and categories visible to management." }
       ]
     }
   ],
 
   "outputs": [
-    { "id": "observation", "label": "Safety Observation", "icon": "shield", "fromState": "assured", "description": "A classified, described safety observation created in Autodesk Forma." }
+    { "id": "observation", "label": "Automated Form Workflow", "icon": "shield", "fromState": "governed", "description": "A classified, evidence-linked safety observation created in Autodesk Forma." },
+    { "id": "dashboard", "label": "Real-Time Insight", "icon": "check", "fromState": "governed", "description": "Management dashboard updated with the latest site safety statistics and observation trends." }
   ],
 
   "plots": [
     {
       "id": "main", "name": "WhatsApp → Safety Observation",
       "steps": [
-        { "type": "actor-intro", "ref": "chat1", "caption": "A site foreman sends a quick, unstructured hazard message.", "dwell": 3800 },
-        { "type": "input-appear", "ref": "chat1", "caption": "The message arrives with a short note and no structure.", "dwell": 2800 },
-        { "type": "move-to", "ref": "capture", "caption": "The Review Agent captures the message and confirms project context.", "dwell": 2600 },
-        { "type": "process", "ref": "understand", "caption": "The Vision and Classification Agents recognise the hazard and tag it.", "dwell": 3200 },
-        { "type": "process", "ref": "structure", "caption": "The Ticketing and Naming Agents build a structured, referenced observation.", "dwell": 3000 },
-        { "type": "process", "ref": "assure", "caption": "The Compliance Agent confirms the observation is complete and conforming.", "dwell": 3000 },
-        { "type": "output-emit", "ref": "observation", "caption": "A governed safety observation is created in Forma — from a casual message.", "dwell": 4000 }
+        { "type": "actor-intro", "ref": "chat1", "caption": "A site safety engineer screenshots a hazard discussion from the team's WhatsApp group.", "dwell": 3800 },
+        { "type": "input-appear", "ref": "chat1", "caption": "Screenshots arrive — a mix of chat messages and on-site photos of a reported hazard.", "dwell": 2800 },
+        { "type": "move-to", "ref": "capture", "caption": "The Conversation Summary Agent reads the thread; Image Analysis scans the photos for hazard objects.", "dwell": 3200 },
+        { "type": "process", "ref": "understand", "caption": "SGBuildex retrieves the official hazard taxonomy; Hazard Identification assigns the correct category.", "dwell": 3200 },
+        { "type": "process", "ref": "structure", "caption": "The Form Agent creates the Autodesk observation record; Relationship attaches the photo as evidence.", "dwell": 3200 },
+        { "type": "process", "ref": "govern", "caption": "The Dashboard Agent triggers the data pipeline — management's Power BI view updates in real time.", "dwell": 3200 },
+        { "type": "output-emit", "ref": "observation", "caption": "A classified, evidence-linked safety observation is created in Autodesk Forma.", "dwell": 3200 },
+        { "type": "output-emit", "ref": "dashboard", "caption": "The Power BI dashboard refreshes — site safety statistics are current for management.", "dwell": 4200 }
       ]
     }
   ]
