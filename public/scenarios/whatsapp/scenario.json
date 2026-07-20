@@ -1,0 +1,81 @@
+{
+  "id": "whatsapp",
+  "title": "WhatsApp → Safety Observation",
+  "subtitle": "Demo 2 · site message, integrated to Forma",
+
+  "objectStates": {
+    "raw-chat":    { "base": "chat" },
+    "chat-tagged": { "base": "chat", "badges": ["tags"] },
+    "structured":  { "base": "card", "badges": ["tags", "rename"] },
+    "assured":     { "base": "card", "badges": ["tags", "rename", "stamp-green"] }
+  },
+
+  "inputs": [
+    {
+      "id": "chat1",
+      "label": "WhatsApp message",
+      "icon": "chat",
+      "description": "A short, unstructured hazard note sent from site through a messaging channel.",
+      "inputFormat": "A free-text chat message, optionally with a site photo attached.",
+      "startsAs": "raw-chat",
+      "persona": {
+        "role": "Site Foreman",
+        "quote": "I fire off a quick message from site — someone in the office still has to turn it into a proper safety record.",
+        "avatar": "inspector"
+      }
+    }
+  ],
+
+  "stations": [
+    {
+      "id": "capture", "label": "CAPTURE", "transformTo": "raw-chat",
+      "description": "Pulls the message from its channel and confirms project context.",
+      "agents": [
+        { "name": "Review", "icon": "eye", "description": "Captures the message and confirms project context.", "output": "A verified message tied to the right project." }
+      ]
+    },
+    {
+      "id": "understand", "label": "UNDERSTAND", "transformTo": "chat-tagged",
+      "description": "Interprets the note and classifies the hazard.",
+      "agents": [
+        { "name": "Vision", "icon": "eye", "description": "Reads any attached photo and recognises the hazard.", "output": "A recognised hazard with severity." },
+        { "name": "Classification", "icon": "tag", "description": "Extracts discipline, location and observation type.", "output": "A tagged observation: type, location, severity." }
+      ]
+    },
+    {
+      "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
+      "description": "Turns the understood note into a structured observation.",
+      "agents": [
+        { "name": "Ticketing", "icon": "ticket", "description": "Creates a structured observation record.", "output": "A structured safety-observation record." },
+        { "name": "Naming", "icon": "rename", "description": "Applies the enforced reference format.", "output": "A compliant observation reference." }
+      ]
+    },
+    {
+      "id": "assure", "label": "ASSURE", "transformTo": "assured",
+      "description": "Runs the final checks before it is written to Forma.",
+      "agents": [
+        { "name": "Data QA", "icon": "check", "description": "Confirms the observation is complete.", "output": "A completeness pass with any gaps flagged." },
+        { "name": "Compliance", "icon": "shield", "description": "Confirms it conforms before hand-off.", "output": "A CONFORMING observation, ready for Forma." }
+      ]
+    }
+  ],
+
+  "outputs": [
+    { "id": "observation", "label": "Safety Observation", "icon": "shield", "fromState": "assured", "description": "A classified, described safety observation created in Autodesk Forma." }
+  ],
+
+  "plots": [
+    {
+      "id": "main", "name": "WhatsApp → Safety Observation",
+      "steps": [
+        { "type": "actor-intro", "ref": "chat1", "caption": "A site foreman sends a quick, unstructured hazard message.", "dwell": 3800 },
+        { "type": "input-appear", "ref": "chat1", "caption": "The message arrives with a short note and no structure.", "dwell": 2800 },
+        { "type": "move-to", "ref": "capture", "caption": "The Review Agent captures the message and confirms project context.", "dwell": 2600 },
+        { "type": "process", "ref": "understand", "caption": "The Vision and Classification Agents recognise the hazard and tag it.", "dwell": 3200 },
+        { "type": "process", "ref": "structure", "caption": "The Ticketing and Naming Agents build a structured, referenced observation.", "dwell": 3000 },
+        { "type": "process", "ref": "assure", "caption": "The Compliance Agent confirms the observation is complete and conforming.", "dwell": 3000 },
+        { "type": "output-emit", "ref": "observation", "caption": "A governed safety observation is created in Forma — from a casual message.", "dwell": 4000 }
+      ]
+    }
+  ]
+}

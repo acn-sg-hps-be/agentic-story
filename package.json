@@ -1,0 +1,19 @@
+{
+  "name": "agentic-factory",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Agent Line — a reusable, config-driven 2.5D agentic-orchestration storytelling engine. All art is code-drawn SVG; all story content lives in scenario JSON.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist -t"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.8"
+  }
+}

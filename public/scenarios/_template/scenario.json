@@ -1,0 +1,75 @@
+{
+  "id": "my-story",
+  "title": "My story title",
+  "subtitle": "Optional strapline",
+
+  "objectStates": {
+    "raw":     { "base": "envelope" },
+    "tagged":  { "base": "envelope", "badges": ["tags"] },
+    "assured": { "base": "card", "badges": ["tags", "stamp-green"] }
+  },
+
+  "inputs": [
+    {
+      "id": "input1",
+      "label": "Incoming item",
+      "icon": "envelope",
+      "description": "What this input is and why it is messy / manual today.",
+      "media": "media/input1.svg",
+      "startsAs": "raw",
+      "persona": {
+        "role": "The person who sends it",
+        "quote": "A one-line pain point in their own voice.",
+        "avatar": "office"
+      }
+    }
+  ],
+
+  "stations": [
+    {
+      "id": "understand",
+      "label": "UNDERSTAND",
+      "transformTo": "tagged",
+      "description": "What this station does.",
+      "media": "media/understand.svg",
+      "agents": [
+        { "name": "Classification", "icon": "tag", "description": "What this agent does.", "media": "media/agent-classify.svg" }
+      ]
+    },
+    {
+      "id": "assure",
+      "label": "ASSURE",
+      "transformTo": "assured",
+      "description": "Final checks before anything is written.",
+      "media": "media/assure.svg",
+      "agents": [
+        { "name": "Compliance", "icon": "shield", "description": "What this agent checks.", "media": "media/agent-compliance.svg" }
+      ]
+    }
+  ],
+
+  "outputs": [
+    {
+      "id": "output1",
+      "label": "Governed result",
+      "icon": "card",
+      "description": "The clean, governed thing that comes out.",
+      "media": "media/output1.svg",
+      "fromState": "assured"
+    }
+  ],
+
+  "plots": [
+    {
+      "id": "main",
+      "name": "My story",
+      "steps": [
+        { "type": "actor-intro",  "ref": "input1",     "caption": "The person states their pain point.", "dwell": 3600 },
+        { "type": "input-appear", "ref": "input1",     "caption": "The item arrives.", "dwell": 2600 },
+        { "type": "move-to",      "ref": "understand", "caption": "It is read and classified.", "dwell": 3000 },
+        { "type": "process",      "ref": "assure",     "caption": "Compliance checks pass.", "dwell": 2600 },
+        { "type": "output-emit",  "ref": "output1",    "caption": "A governed result is produced.", "dwell": 3600 }
+      ]
+    }
+  ]
+}
