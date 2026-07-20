@@ -145,7 +145,6 @@ export async function createApp(mount: HTMLElement): Promise<void> {
     stageWrap.replaceChildren(scene.svg);
 
     // final executive "outcomes" set: one card per output-emit step
-    const lastIndex = plot.steps.length - 1;
     const outcomes = plot.steps
       .filter((s) => s.type === 'output-emit')
       .map((s) => {
@@ -154,9 +153,10 @@ export async function createApp(mount: HTMLElement): Promise<void> {
       });
 
     runner = new PlotRunner(scenario, plot, scene, {
-      onStepChange: (i, step) => {
-        if (i === lastIndex && outcomes.length) {
-          // final step: swap the subtitle for the outcomes bar (all cards)
+      onStepChange: (_i, step) => {
+        // Any output-emit step shows the full outcomes bar (all cards) and hides
+        // the subtitle — so no per-output captions ever leak as subtitles.
+        if (step.type === 'output-emit' && outcomes.length) {
           caption.style.display = 'none';
           showOutcomes(outcomes);
         } else {

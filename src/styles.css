@@ -158,12 +158,13 @@ svg text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
   gap: calc(10px * var(--s)); max-width: 94%; pointer-events: none;
 }
 .af-outcomes-title {
-  font-size: calc(13px * var(--s)); letter-spacing: 3px; text-transform: uppercase;
-  color: #00e6a8; font-weight: 800; text-shadow: 0 1px 6px #000;
+  font-size: calc(14px * var(--s)); letter-spacing: 3px; text-transform: uppercase; font-weight: 800;
+  color: #06202a; background: #00e6a8; padding: calc(5px * var(--s)) calc(18px * var(--s));
+  border-radius: 999px; box-shadow: 0 4px 18px #00e6a855;
 }
-.af-outcomes-row { display: flex; gap: calc(14px * var(--s)); justify-content: center; flex-wrap: wrap; }
+.af-outcomes-row { display: flex; flex-wrap: nowrap; gap: calc(14px * var(--s)); justify-content: center; }
 .af-outcome-card {
-  width: calc(240px * var(--s)); background: rgba(11, 6, 24, 0.88); border: 1px solid #00e6a866;
+  width: calc(220px * var(--s)); flex: 0 0 auto; background: rgba(11, 6, 24, 0.9); border: 1px solid #00e6a866;
   border-radius: calc(14px * var(--s)); padding: calc(16px * var(--s)) calc(16px * var(--s)) calc(18px * var(--s));
   text-align: center; box-shadow: 0 10px 34px #0008;
 }
