@@ -19,7 +19,7 @@
       "inputFormat": "One or more screenshot images containing a mix of chat text and embedded site photos.",
       "startsAs": "raw-shot",
       "persona": {
-        "role": "Site Safety Engineer",
+        "role": "RE/RTO Engineer",
         "quote": "The team flags hazards in our site chat group — I screenshot the thread and turn it into a proper safety record before anything gets missed.",
         "avatar": "inspector"
       }
@@ -39,7 +39,7 @@
       "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged-shot",
       "description": "Retrieves the official hazard taxonomy and assigns the correct category to the identified hazard.",
       "agents": [
-        { "name": "SGBuildex", "icon": "link", "description": "Queries the SGBuildex API to retrieve the official hazard categories and safety observation taxonomy applicable to this project.", "output": "The applicable hazard taxonomy: category list, severity levels, and required fields." },
+        { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-Hazard.png", "description": "Queries the SGBuildex API to retrieve the official hazard categories and safety observation taxonomy applicable to this project.", "output": "The applicable hazard taxonomy: category list, severity levels, and required fields." },
         { "name": "Hazard Identification", "icon": "tag", "description": "Maps the hazard objects detected by Image Analysis to the correct official category from the SGBuildex taxonomy.", "output": "A classified hazard: official category, severity, and description." }
       ]
     },
