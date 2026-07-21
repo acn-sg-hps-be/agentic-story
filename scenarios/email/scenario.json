@@ -16,6 +16,7 @@
       "id": "email1",
       "label": "Incoming Emails",
       "icon": "envelope",
+      "media": "media/Incoming-Emails.png",
       "description": "Emails from consultants, contractors, and project authorities — each with a different format, attachment type, and level of detail — land in the shared project inbox.",
       "inputFormat": "Emails with varied free-text bodies and mixed attachment types (PDF, CAD, scanned documents).",
       "startsAs": "raw",
@@ -32,31 +33,31 @@
       "id": "capture", "label": "CAPTURE", "transformTo": "raw",
       "description": "Ingests each email and confirms it belongs to an active project.",
       "agents": [
-        { "name": "Email Review", "icon": "eye", "description": "Analyses the email content, validates the sender, and confirms the active project context.", "output": "A verified email bound to the right project." }
+        { "name": "Email Review", "icon": "eye", "media": "media/Email-Review.png", "description": "Analyses the email content, validates the sender, and confirms the active project context.", "output": "A verified email bound to the right project." }
       ]
     },
     {
       "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged",
       "description": "Classifies the content, extracts attachment metadata, and retrieves the project's ISO 19650 taxonomy.",
       "agents": [
-        { "name": "Content Extraction", "icon": "eye", "description": "Reads all attachments across mixed file formats — PDF, CAD, scanned documents — and extracts the raw content for further processing.", "output": "Extracted text and data from all attachments, ready for classification." },
+        { "name": "Content Extraction", "icon": "eye", "media": "media/Content-Extraction.png", "description": "Reads all attachments across mixed file formats — PDF, CAD, scanned documents — and extracts the raw content for further processing.", "output": "Extracted text and data from all attachments, ready for classification." },
         { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-ISO19650.png", "description": "Queries the SGBuildex API to retrieve the HDB-specific ISO 19650 document naming convention and folder taxonomy for this project.", "output": "The applicable ISO 19650 taxonomy: naming template, folder path, and required metadata columns." },
-        { "name": "Classification", "icon": "tag", "description": "Classifies the document type, engineering discipline, and project location using the extracted content and ISO 19650 taxonomy.", "output": "A tagged item: document type, discipline, location." }
+        { "name": "Classification", "icon": "tag", "media": "media/Classification.png", "description": "Classifies the document type, engineering discipline, and project location using the extracted content and ISO 19650 taxonomy.", "output": "A tagged item: document type, discipline, location." }
       ]
     },
     {
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
       "description": "Creates a tracked issue in Autodesk and files attachments to the ISO 19650 standard.",
       "agents": [
-        { "name": "Ticketing", "icon": "ticket", "description": "Creates a typed Autodesk Issue from the email, linked to the relevant project element and assignee.", "output": "An Autodesk Issue with type, discipline, description, and project linkage." },
-        { "name": "Document Archival", "icon": "rename", "description": "Files each attachment into the correct folder with an ISO 19650-compliant name and all required metadata columns, following the taxonomy retrieved from SGBuildex.", "output": "Attachments archived under compliant names, in the correct folder, with full metadata." }
+        { "name": "Ticketing", "icon": "ticket", "media": "media/Ticketing.png", "description": "Creates a typed Autodesk Issue from the email, linked to the relevant project element and assignee.", "output": "An Autodesk Issue with type, discipline, description, and project linkage." },
+        { "name": "Document Archival", "icon": "rename", "media": "media/Document-Archival.png", "description": "Files each attachment into the correct folder with an ISO 19650-compliant name and all required metadata columns, following the taxonomy retrieved from SGBuildex.", "output": "Attachments archived under compliant names, in the correct folder, with full metadata." }
       ]
     },
     {
       "id": "govern", "label": "GOVERN", "transformTo": "assured",
       "description": "Archives the email thread as a traceable decision record in the project's Common Data Environment.",
       "agents": [
-        { "name": "Decision Record", "icon": "shield", "description": "Archives the email thread into a SharePoint document library as an ISO 19650 decision record — capturing who decided what, when, and based on which documents. Indexed for Copilot Agent to interrogate the project's decision trail.", "output": "An ISO 19650 decision record in SharePoint: email thread, linked documents, and decision context — queryable by Copilot for decision tracking and audit." }
+        { "name": "Decision Record", "icon": "shield", "media": "media/Decision-Record.png", "description": "Archives the email thread into a SharePoint document library as an ISO 19650 decision record — capturing who decided what, when, and based on which documents. Indexed for Copilot Agent to interrogate the project's decision trail.", "output": "An ISO 19650 decision record in SharePoint: email thread, linked documents, and decision context — queryable by Copilot for decision tracking and audit." }
       ]
     }
   ],
