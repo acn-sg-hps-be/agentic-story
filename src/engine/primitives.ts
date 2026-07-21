@@ -519,7 +519,7 @@ export function machineHousing(variant = 0): SVGGElement {
   const v = ((variant % 4) + 4) % 4;
   const w = 80, h = 104, d = 40, fx = -w / 2, fy = -h;
   const parts: SVGElement[] = [
-    ellipse(dpt(d).x / 2, 8, 78, 22, { class: 'af-spotlight', fill: 'url(#af-glow-amber)', opacity: 0 }),
+    ellipse(dpt(d).x / 2, 6, 128, 40, { class: 'af-spotlight', fill: 'url(#af-glow-amber)', opacity: 0 }),
     g({ filter: 'url(#af-shadow)' }, isoBox(fx, fy, w, h, d)),
     rect({ x: fx + 6, y: fy + 5, width: w - 12, height: 7, rx: 3.5, fill: '#ffffff', 'fill-opacity': 0.12 }),
   ];

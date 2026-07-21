@@ -88,7 +88,21 @@ export function createModal(host: HTMLElement, onClose?: () => void): ModalContr
       // media below the text
       const mediaBox = document.createElement('div');
       mediaBox.className = 'af-modal-media';
-      mediaBox.appendChild(buildMedia(content.media));
+      const mediaEl = buildMedia(content.media);
+      mediaBox.appendChild(mediaEl);
+      // videos have native fullscreen; give images a click-to-enlarge lightbox
+      if (mediaEl.tagName === 'IMG') {
+        const src = (mediaEl as HTMLImageElement).src;
+        mediaEl.classList.add('af-zoomable');
+        mediaEl.addEventListener('click', () => openLightbox(host, src));
+        const enlarge = document.createElement('button');
+        enlarge.className = 'af-modal-expand';
+        enlarge.setAttribute('aria-label', 'Enlarge image');
+        enlarge.title = 'Enlarge';
+        enlarge.textContent = '⛶';
+        enlarge.addEventListener('click', () => openLightbox(host, src));
+        mediaBox.appendChild(enlarge);
+      }
       dialog.appendChild(mediaBox);
 
       overlay.hidden = false;
@@ -123,6 +137,21 @@ function videoEl(src: string, onFail: () => HTMLElement): HTMLVideoElement {
   v.playsInline = true; v.preload = 'metadata';
   v.onerror = () => v.replaceWith(onFail());
   return v;
+}
+
+/** Full-window image viewer; click anywhere or press Esc to close. */
+function openLightbox(host: HTMLElement, src: string): void {
+  const lb = document.createElement('div');
+  lb.className = 'af-lightbox';
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = '';
+  lb.appendChild(img);
+  const close = () => { lb.remove(); document.removeEventListener('keydown', esc); };
+  const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', esc);
+  host.appendChild(lb);
 }
 
 function buildMedia(url: string | null): HTMLElement {
