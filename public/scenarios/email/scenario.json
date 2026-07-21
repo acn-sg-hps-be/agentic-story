@@ -40,7 +40,7 @@
       "description": "Classifies the content, extracts attachment metadata, and retrieves the project's ISO 19650 taxonomy.",
       "agents": [
         { "name": "Content Extraction", "icon": "eye", "description": "Reads all attachments across mixed file formats — PDF, CAD, scanned documents — and extracts the raw content for further processing.", "output": "Extracted text and data from all attachments, ready for classification." },
-        { "name": "SGBuildex", "icon": "link", "description": "Queries the SGBuildex API to retrieve the HDB-specific ISO 19650 document naming convention and folder taxonomy for this project.", "output": "The applicable ISO 19650 taxonomy: naming template, folder path, and required metadata columns." },
+        { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-ISO19650.png", "description": "Queries the SGBuildex API to retrieve the HDB-specific ISO 19650 document naming convention and folder taxonomy for this project.", "output": "The applicable ISO 19650 taxonomy: naming template, folder path, and required metadata columns." },
         { "name": "Classification", "icon": "tag", "description": "Classifies the document type, engineering discipline, and project location using the extracted content and ISO 19650 taxonomy.", "output": "A tagged item: document type, discipline, location." }
       ]
     },
