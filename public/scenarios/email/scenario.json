@@ -21,7 +21,7 @@
       "inputFormat": "Emails with varied free-text bodies and mixed attachment types (PDF, CAD, scanned documents).",
       "startsAs": "raw",
       "persona": {
-        "role": "HDB Project Manager",
+        "role": "HDB Project Officer",
         "quote": "I get dozens of emails a week from different consultants — tracking which ones need a ticket and making sure attachments are filed correctly takes half my day.",
         "avatar": "office"
       }
@@ -72,7 +72,7 @@
     {
       "id": "main", "name": "Email → Ticket + ISO 19650",
       "steps": [
-        { "type": "actor-intro", "ref": "email1", "caption": "An HDB project manager tracks dozens of emails a week — manual triage, renaming, and filing consume half their day.", "dwell": 3800 },
+        { "type": "actor-intro", "ref": "email1", "caption": "An HDB project officer tracks dozens of emails a week — manual triage, renaming, and filing consume half their day.", "dwell": 3800 },
         { "type": "input-appear", "ref": "email1", "caption": "Emails arrive from multiple stakeholders — varied formats, attachment types, and levels of detail.", "dwell": 2800 },
         { "type": "move-to", "ref": "capture", "caption": "The Email Review Agent ingests each email and confirms project context.", "dwell": 2600 },
         { "type": "process", "ref": "understand", "caption": "Classification, Document Analysis, and SGBuildex Agents tag the content and retrieve the ISO 19650 taxonomy.", "dwell": 3400 },
