@@ -17,7 +17,7 @@
       "icon": "photo",
       "media": "media/Whatsapp-Screenshots.png",
       "description": "Screenshots from a site WhatsApp group — containing chat messages, on-site photos, and informal hazard discussions captured by the team.",
-      "inputFormat": "One or more screenshot images containing a mix of chat text and embedded site photos.",
+      "inputFormat": "Screenshot images — a mix of chat messages and on-site photos.",
       "startsAs": "raw-shot",
       "persona": {
         "role": "RE/RTO Engineer",
@@ -32,38 +32,38 @@
       "id": "capture", "label": "CAPTURE", "transformTo": "raw-shot",
       "description": "Reads the screenshots and separates the conversation text from the embedded site photos.",
       "agents": [
-        { "name": "Conversation Summary", "icon": "eye", "media": "media/Conversation-Summary.png", "description": "Reads the WhatsApp screenshots, extracts the chat thread, and produces a concise summary of the reported issue and its context.", "output": "A structured conversation summary: reported issue, location, time, and involved parties." },
-        { "name": "Image Analysis", "icon": "eye", "media": "media/Image-Analysis.png", "description": "Applies computer vision to the extracted site photos to identify hazard objects, unsafe conditions, and relevant scene details.", "output": "Detected hazard objects and conditions identified in the photos." }
+        { "name": "Conversation Summary", "icon": "eye", "media": "media/Conversation-Summary.png", "description": "Reads the screenshots and produces a clear summary of the reported hazard — covering what happened, where, and who was involved.", "output": "Hazard summary: issue, location, time, and people involved." },
+        { "name": "Image Analysis", "icon": "eye", "media": "media/Image-Analysis.png", "description": "Scans the on-site photos to spot unsafe conditions, hazard objects, and relevant scene details.", "output": "Hazard objects and unsafe conditions identified from photos." }
       ]
     },
     {
       "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged-shot",
       "description": "Retrieves the official hazard taxonomy and assigns the correct category to the identified hazard.",
       "agents": [
-        { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-Hazard.png", "description": "Queries the SGBuildex API to retrieve the official hazard categories and safety observation taxonomy applicable to this project.", "output": "The applicable hazard taxonomy: category list, severity levels, and required fields." },
-        { "name": "Hazard Identification", "icon": "tag", "media": "media/Hazard-Identification.png", "description": "Maps the hazard objects detected by Image Analysis to the correct official category from the SGBuildex taxonomy.", "output": "A classified hazard: official category, severity, and description." }
+        { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-Hazard.png", "description": "Queries the SGBuildex API to retrieve the official Singapore hazard categories and safety observation requirements for this project.", "output": "Official hazard categories and required fields confirmed." },
+        { "name": "Hazard Identification", "icon": "tag", "media": "media/Hazard-Identification.png", "description": "Matches each detected hazard to the correct official category and severity level from the Singapore reference database.", "output": "Hazard classified: official category and severity confirmed." }
       ]
     },
     {
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
       "description": "Creates the safety observation form in Autodesk and attaches the photo evidence.",
       "agents": [
-        { "name": "Form", "icon": "ticket", "media": "media/Form.mp4", "description": "Creates and populates the Autodesk Forms safety observation record, using the conversation summary and classified hazard data. The form can be reviewed in Claude Chat or auto-submitted.", "output": "A completed safety observation form in Autodesk, ready for review or submission." },
-        { "name": "Relationship", "icon": "link", "media": "media/Relationship.png", "description": "Attaches the site photo to the form as evidence, with proper metadata linkage to keep the record traceable.", "output": "Photo attached to the observation form with metadata relationship." }
+        { "name": "Form", "icon": "ticket", "media": "media/Form.mp4", "description": "Fills in the Autodesk safety observation form using the hazard summary and classification. The completed form is ready for review or direct submission.", "output": "Safety observation form completed in Autodesk." },
+        { "name": "Relationship", "icon": "link", "media": "media/Relationship.png", "description": "Attaches the site photo to the safety record as evidence, keeping the observation traceable back to what was seen on the ground.", "output": "Site photo attached to the observation as evidence." }
       ]
     },
     {
       "id": "govern", "label": "GOVERN", "transformTo": "governed",
       "description": "Triggers the data pipeline to refresh the management Power BI dashboard with the latest safety statistics.",
       "agents": [
-        { "name": "Dashboard", "icon": "check", "media": "media/Dashboard.png", "description": "Triggers the downstream data pipeline to refresh the Power BI safety dashboard, ensuring management sees up-to-date site observation statistics and trends.", "output": "Power BI dashboard refreshed — latest safety observation counts and categories visible to management." }
+        { "name": "Dashboard", "icon": "check", "media": "media/Dashboard.png", "description": "Triggers the downstream data pipeline to refresh the Power BI dashboard, ensuring management sees up-to-date safety statistics within minutes.", "output": "Management dashboard updated with the latest safety statistics." }
       ]
     }
   ],
 
   "outputs": [
-    { "id": "observation", "label": "Automated Form Workflow", "icon": "shield", "fromState": "governed", "description": "A classified, evidence-linked safety observation created in Autodesk Forma." },
-    { "id": "dashboard", "label": "Real-Time Insight", "icon": "check", "fromState": "governed", "description": "Management dashboard updated with the latest site safety statistics and observation trends." }
+    { "id": "observation", "label": "Automated Form Workflow", "icon": "shield", "fromState": "governed", "description": "A classified safety observation with photo evidence — created in Autodesk Forma automatically." },
+    { "id": "dashboard", "label": "Real-Time Insight", "icon": "check", "fromState": "governed", "description": "Management sees up-to-date statistics on Power BI for hazards being reported." }
   ],
 
   "plots": [
