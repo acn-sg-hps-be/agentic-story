@@ -62,8 +62,8 @@
   ],
 
   "outputs": [
-    { "id": "observation", "label": "Automated Form Workflow", "icon": "shield", "fromState": "governed", "description": "A classified, evidence-linked safety observation created in Autodesk Forma." },
-    { "id": "dashboard", "label": "Real-Time Insight", "icon": "check", "fromState": "governed", "description": "Management dashboard updated with the latest site safety statistics and observation trends." }
+    { "id": "observation", "label": "Automated Form Workflow", "icon": "shield", "fromState": "governed", "description": "A classified safety observation with photo evidence — created in Autodesk Forma automatically." },
+    { "id": "dashboard", "label": "Real-Time Insight", "icon": "check", "fromState": "governed", "description": "Management sees up-to-date statistics on Power BI for hazards being reported." }
   ],
 
   "plots": [
