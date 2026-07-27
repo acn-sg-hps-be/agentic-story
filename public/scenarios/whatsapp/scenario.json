@@ -40,7 +40,7 @@
       "id": "understand", "label": "UNDERSTAND", "transformTo": "tagged-shot",
       "description": "Retrieves the official hazard taxonomy and assigns the correct category to the identified hazard.",
       "agents": [
-        { "name": "SGBuildex", "icon": "link", "media": "media/SGBuildex-Hazard.png", "description": "Queries the SGBuildex API to retrieve the official Singapore hazard categories and safety observation requirements for this project.", "output": "Official hazard categories and required fields confirmed." },
+        { "name": "SGBuildex", "icon": "link", "media": "media/Policy.png", "description": "Queries the SGBuildex API to retrieve the official Singapore hazard categories and safety observation requirements for this project.", "output": "Official hazard categories and required fields confirmed." },
         { "name": "Hazard Identification", "icon": "tag", "media": "media/Hazard-Identification.png", "description": "Matches each detected hazard to the correct official category and severity level from the Singapore reference database.", "output": "Hazard classified: official category and severity confirmed." }
       ]
     },
