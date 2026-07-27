@@ -1,11 +1,11 @@
 {
   "id": "whatsapp",
   "title": "WhatsApp → Safety Observation",
-  "subtitle": "Demo 2 · site screenshots, integrated to Forma",
+  "subtitle": "Demo 2 · site chat, integrated to Forma",
 
   "objectStates": {
-    "raw-shot":   { "base": "photo" },
-    "tagged-shot":{ "base": "photo", "badges": ["tags"] },
+    "raw-shot":   { "base": "chat" },
+    "tagged-shot":{ "base": "chat", "badges": ["tags"] },
     "structured": { "base": "card", "badges": ["tags", "rename"] },
     "governed":   { "base": "card", "badges": ["tags", "rename", "stamp-green"] }
   },
@@ -13,15 +13,15 @@
   "inputs": [
     {
       "id": "chat1",
-      "label": "WhatsApp Screenshots",
-      "icon": "photo",
+      "label": "WhatsApp Chat",
+      "icon": "chat",
       "media": "media/Whatsapp-Screenshots.png",
-      "description": "Screenshots from a site WhatsApp group — containing chat messages, on-site photos, and informal hazard discussions captured by the team.",
-      "inputFormat": "Screenshot images — a mix of chat messages and on-site photos.",
+      "description": "Hazard reports land informally in the team's WhatsApp group — mixed with photos, discussion, and follow-ups. Every one of them needs to be manually reviewed and filed as a formal safety observation.",
+      "inputFormat": "A WhatsApp chat thread containing a hazard report, discussion, and one or more on-site photos.",
       "startsAs": "raw-shot",
       "persona": {
         "role": "RE/RTO Engineer",
-        "quote": "The team flags hazards in our site chat group — I screenshot the thread and turn it into a proper safety record before anything gets missed.",
+        "quote": "Hazards get flagged in our site chat all the time — but turning each one into a proper safety record still takes me away from the site to do it manually.",
         "avatar": "inspector"
       }
     }
@@ -30,9 +30,9 @@
   "stations": [
     {
       "id": "capture", "label": "CAPTURE", "transformTo": "raw-shot",
-      "description": "Reads the screenshots and separates the conversation text from the embedded site photos.",
+      "description": "The agent reads the chat thread and the attached site photos to understand the reported hazard.",
       "agents": [
-        { "name": "Conversation Summary", "icon": "eye", "media": "media/Conversation-Summary.png", "description": "Reads the screenshots and produces a clear summary of the reported hazard — covering what happened, where, and who was involved.", "output": "Hazard summary: issue, location, time, and people involved." },
+        { "name": "Conversation Summary", "icon": "eye", "media": "media/Conversation-Summary.png", "description": "Reads the chat thread and produces a clear summary of the reported hazard — what happened, where, and who was involved.", "output": "Hazard summary: issue, location, time, and people involved." },
         { "name": "Image Analysis", "icon": "eye", "media": "media/Image-Analysis.png", "description": "Scans the on-site photos to spot unsafe conditions, hazard objects, and relevant scene details.", "output": "Hazard objects and unsafe conditions identified from photos." }
       ]
     },
@@ -70,8 +70,8 @@
     {
       "id": "main", "name": "WhatsApp → Safety Observation",
       "steps": [
-        { "type": "actor-intro", "ref": "chat1", "caption": "A site safety engineer screenshots a hazard discussion from the team's WhatsApp group.", "dwell": 3800 },
-        { "type": "input-appear", "ref": "chat1", "caption": "Screenshots arrive — a mix of chat messages and on-site photos of a reported hazard.", "dwell": 2800 },
+        { "type": "actor-intro", "ref": "chat1", "caption": "A RE/RTO Engineer's team flags hazards in the site WhatsApp group — but every formal safety record still has to be filled in by hand.", "dwell": 3800 },
+        { "type": "input-appear", "ref": "chat1", "caption": "A hazard is reported in the group chat — messages and site photos, no paperwork.", "dwell": 2800 },
         { "type": "move-to", "ref": "capture", "caption": "The Conversation Summary Agent reads the thread; Image Analysis scans the photos for hazard objects.", "dwell": 3200 },
         { "type": "process", "ref": "understand", "caption": "The Policy Agent retrieves the applicable regulatory hazard classifications; Hazard Identification assigns the correct category.", "dwell": 3200 },
         { "type": "process", "ref": "structure", "caption": "The Form Agent creates the Autodesk observation record; Relationship attaches the photo as evidence.", "dwell": 3200 },
