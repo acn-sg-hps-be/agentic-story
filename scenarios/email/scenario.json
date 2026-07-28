@@ -49,15 +49,15 @@
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
       "description": "Creates a tracked issue in Autodesk and files attachments to the ISO 19650 standard.",
       "agents": [
-        { "name": "Ticketing", "icon": "ticket", "media": "media/Ticketing.png", "description": "Raises a formal issue in Autodesk — setting the type, assignee, and description so it flows straight into the project's tracking workflow.", "output": "An Autodesk Issue — typed, assigned, and linked to the project." },
-        { "name": "Document Archival", "icon": "rename", "media": "media/Document-Archival.png", "description": "Renames each attachment for ISO 19650 compliance, moves it to the correct folder, and fills in all required metadata fields.", "output": "Attachments filed: compliant naming, correct folder, full metadata." }
+        { "name": "Ticketing", "icon": "ticket", "media": "media/Ticketing.mp4", "description": "Raises a formal issue in Autodesk — setting the type, assignee, and description so it flows straight into the project's tracking workflow.", "output": "An Autodesk Issue — typed, assigned, and linked to the project." },
+        { "name": "Document Archival", "icon": "rename", "media": "media/Document-Archival.mp4", "description": "Renames each attachment for ISO 19650 compliance, moves it to the correct folder, and fills in all required metadata fields.", "output": "Attachments filed: compliant naming, correct folder, full metadata." }
       ]
     },
     {
       "id": "govern", "label": "GOVERN", "transformTo": "assured",
       "description": "Archives the email thread as a traceable decision record in the project's Common Data Environment.",
       "agents": [
-        { "name": "Decision Record", "icon": "shield", "media": "media/Decision-Record.png", "description": "Saves the full email thread to SharePoint as an official decision record — capturing who decided what, when, and against which documents.", "output": "Decision record in SharePoint — traceable and searchable by Copilot." }
+        { "name": "Decision Record", "icon": "shield", "media": "media/Decision-Combined.mp4", "description": "Saves the full email thread to SharePoint as an official decision record — capturing who decided what, when, and against which documents.", "output": "Decision record in SharePoint — traceable and searchable by Copilot." }
       ]
     }
   ],
