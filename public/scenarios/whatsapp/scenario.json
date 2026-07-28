@@ -48,8 +48,7 @@
       "id": "structure", "label": "STRUCTURE", "transformTo": "structured",
       "description": "Creates the safety observation form in Autodesk and attaches the photo evidence.",
       "agents": [
-        { "name": "Form", "icon": "ticket", "media": "media/Form.mp4", "description": "Fills in the Autodesk safety observation form using the hazard summary and classification. The completed form is ready for review or direct submission.", "output": "Safety observation form completed in Autodesk." },
-        { "name": "Relationship", "icon": "link", "media": "media/Relationship.png", "description": "Attaches the site photo to the safety record as evidence, keeping the observation traceable back to what was seen on the ground.", "output": "Site photo attached to the observation as evidence." }
+        { "name": "Form", "icon": "ticket", "media": "media/Form.mp4", "description": "Fills in the Autodesk safety observation form using the hazard summary and classification. The completed form is ready for review or direct submission.", "output": "Safety observation form completed in Autodesk." }
       ]
     },
     {
@@ -74,7 +73,7 @@
         { "type": "input-appear", "ref": "chat1", "caption": "A hazard is reported in the group chat — messages and site photos, no paperwork.", "dwell": 2800 },
         { "type": "move-to", "ref": "capture", "caption": "The Conversation Summary Agent reads the thread; Image Analysis scans the photos for hazard objects.", "dwell": 3200 },
         { "type": "process", "ref": "understand", "caption": "The Policy Agent retrieves the applicable regulatory hazard classifications; Hazard Identification assigns the correct category.", "dwell": 3200 },
-        { "type": "process", "ref": "structure", "caption": "The Form Agent creates the Autodesk observation record; Relationship attaches the photo as evidence.", "dwell": 3200 },
+        { "type": "process", "ref": "structure", "caption": "The Form Agent creates and populates the Autodesk safety observation record.", "dwell": 3200 },
         { "type": "process", "ref": "govern", "caption": "The Dashboard Agent triggers the data pipeline — management's Power BI view updates in real time.", "dwell": 3200 },
         { "type": "output-emit", "ref": "observation", "caption": "A classified, evidence-linked safety observation is created in Autodesk Forma.", "dwell": 3200 },
         { "type": "output-emit", "ref": "dashboard", "caption": "The Power BI dashboard refreshes — site safety statistics are current for management.", "dwell": 4200 }
