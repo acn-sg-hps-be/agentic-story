@@ -57,7 +57,7 @@
       "id": "govern", "label": "GOVERN", "transformTo": "assured",
       "description": "Archives the email thread as a traceable decision record in the project's Common Data Environment.",
       "agents": [
-        { "name": "Decision Record", "icon": "shield", "media": "media/Decision-Record.png", "description": "Saves the full email thread to SharePoint as an official decision record — capturing who decided what, when, and against which documents.", "output": "Decision record in SharePoint — traceable and searchable by Copilot." }
+        { "name": "Decision Record", "icon": "shield", "media": "media/Decision-Combined.mp4", "description": "Saves the full email thread to SharePoint as an official decision record — capturing who decided what, when, and against which documents.", "output": "Decision record in SharePoint — traceable and searchable by Copilot." }
       ]
     }
   ],
