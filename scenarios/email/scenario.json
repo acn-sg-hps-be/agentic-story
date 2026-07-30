@@ -63,7 +63,7 @@
   ],
 
   "outputs": [
-    { "id": "issue", "label": "Automated Ticketing", "icon": "ticket", "fromState": "assured", "description": "Every actionable email becomes a tracked Autodesk issue — assigned, typed, and project-linked automatically." },
+    { "id": "issue", "label": "Complex Emails Simplified & Tracked", "icon": "ticket", "fromState": "assured", "description": "Every actionable email becomes a tracked Autodesk issue — assigned, typed, and project-linked automatically." },
     { "id": "document", "label": "Compliant Archiving", "icon": "card", "fromState": "assured", "description": "Attachments filed in the right folder with compliant names and full metadata — no manual renaming." },
     { "id": "decision", "label": "Decision Traceability", "icon": "shield", "fromState": "assured", "description": "Every decision has a paper trail — stored in SharePoint and searchable by Copilot." }
   ],
@@ -78,7 +78,7 @@
         { "type": "process", "ref": "understand", "caption": "Classification, Document Analysis, and SGBuildex Agents tag the content and retrieve the ISO 19650 taxonomy.", "dwell": 3400 },
         { "type": "process", "ref": "structure", "caption": "The Ticketing Agent raises an Autodesk Issue; the Document Archival Agent files attachments to spec.", "dwell": 3200 },
         { "type": "process", "ref": "govern", "caption": "The Decision Record Agent archives the email thread to SharePoint as an ISO 19650 decision record.", "dwell": 3200 },
-        { "type": "output-emit", "ref": "issue", "caption": "A typed Autodesk Issue is created and linked to the project.", "dwell": 2800 },
+        { "type": "output-emit", "ref": "issue", "caption": "Complex emails simplified into Autodesk tickets — automatically created, tracked, and linked to the right project.", "dwell": 2800 },
         { "type": "output-emit", "ref": "document", "caption": "Attachments are filed under ISO 19650-compliant names with full metadata.", "dwell": 3000 },
         { "type": "output-emit", "ref": "decision", "caption": "The email thread is preserved as a decision record — Copilot can now trace who decided what and why.", "dwell": 4200 }
       ]
