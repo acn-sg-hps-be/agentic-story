@@ -4,31 +4,42 @@
  * One flattened "demo" dropdown (each plot across all scenarios is a demo),
  * the SVG scene, the plot runner (autoplay + bottom captions), the media
  * popup, transport controls, fullscreen/kiosk, keyboard shortcuts, and a
- * top-left brand bar with the Accenture + HDB logos.
+ * top-left brand bar whose logos come from the project manifest.
+ *
+ * Which project is shown comes from `?project=<id>` (see src/config.ts).
  */
 
-import { loadRegistry, loadScenario, resolveMedia } from '../engine/loader';
+import { loadProject, loadScenario, resolveMedia } from '../engine/loader';
 import { buildScene, type SceneHandle } from '../engine/scene';
 import { PlotRunner, type PopupRef } from '../engine/runner';
 import { createModal } from '../engine/modal';
 import { openGallery } from './gallery';
-import type { Branding, LoadedScenario } from '../engine/types';
-
-const BRANDING: Branding = { title: 'Agentic Factory', mark: 'ACCENTURE' };
+import { DEFAULT_PROJECT, PRODUCT_NAME, projectDir } from '../config';
+import type { Branding, LoadedProject, LoadedScenario, ProjectLogo } from '../engine/types';
 
 interface DemoEntry { path: string; plotIndex: number; label: string; }
 
-export async function createApp(mount: HTMLElement): Promise<void> {
+export async function createApp(mount: HTMLElement, projectId = DEFAULT_PROJECT): Promise<void> {
   mount.innerHTML = '';
   const root = div('af-app');
   mount.appendChild(root);
+
+  // The project manifest supplies the brand bar and the scenario list, so it
+  // has to load before any chrome is drawn.
+  let project: LoadedProject;
+  try {
+    project = await loadProject(projectDir(projectId));
+  } catch (e) {
+    return showError(root, `Could not load the project "${projectId}".`, e);
+  }
+  const branding: Branding = { title: project.manifest.branding?.productName ?? PRODUCT_NAME, mark: project.manifest.title };
 
   const stageWrap = div('af-stage-wrap');
   const caption = div('af-caption');
   const outcomesBar = div('af-outcomes');
   outcomesBar.style.display = 'none';
   const controls = div('af-controls');
-  root.append(stageWrap, caption, outcomesBar, controls, brandBar());
+  root.append(stageWrap, caption, outcomesBar, controls, brandBar(branding.title, project.logos));
 
   const showOutcomes = (list: Array<{ title: string; desc: string }>) => {
     const header = div('af-outcomes-title');
@@ -100,14 +111,11 @@ export async function createApp(mount: HTMLElement): Promise<void> {
     }
   });
 
-  // ---- load every registered scenario, flatten plots into demos -----------
+  // ---- load this project's scenarios, flatten plots into demos ------------
   const loadedByPath = new Map<string, LoadedScenario>();
   const entries: DemoEntry[] = [];
-  let registry;
-  try { registry = await loadRegistry(); }
-  catch (e) { return showError(root, 'Could not load the demo list.', e); }
 
-  for (const ref of registry) {
+  for (const ref of project.scenarios) {
     try {
       const ls = await loadScenario(ref.path);
       loadedByPath.set(ref.path, ls);
@@ -116,7 +124,7 @@ export async function createApp(mount: HTMLElement): Promise<void> {
       console.warn(`Skipping "${ref.path}":`, e);
     }
   }
-  if (!entries.length) return showError(root, 'No demos could be loaded.', new Error('All scenario files failed to load.'));
+  if (!entries.length) return showError(root, `No demos could be loaded for the project "${projectId}".`, new Error('Every scenario file listed in project.json failed to load.'));
 
   demoSelect.replaceChildren(...entries.map((e, i) => option(String(i), e.label)));
   demoSelect.onchange = () => selectEntry(Number(demoSelect.value));
@@ -138,7 +146,7 @@ export async function createApp(mount: HTMLElement): Promise<void> {
     const scenario = loaded.scenario;
     const plot = scenario.plots[plotIndex];
 
-    scene = buildScene(scenario, plot, BRANDING, {
+    scene = buildScene(scenario, plot, branding, {
       onNode: (kind, id) => { if (kind === 'input') openInput(id, true); },
       onAgent: (stationId, agentIndex) => openStationAgent(stationId, agentIndex, true),
     });
@@ -214,19 +222,21 @@ function iconBtn(glyph: string, label: string): HTMLButtonElement {
   b.className = 'af-btn'; b.textContent = glyph; b.setAttribute('aria-label', label); b.title = label;
   return b;
 }
-function brandBar(): HTMLElement {
+/** Top-left brand bar: the project's logos, then the product name. */
+function brandBar(productName: string, logos: ProjectLogo[]): HTMLElement {
   const bar = div('af-brandbar');
-  const logos = document.createElement('div');
-  logos.className = 'af-logos';
-  for (const [src, alt] of [['branding/accenture.svg', 'Accenture'], ['branding/hdb.png', 'HDB']]) {
+  const row = document.createElement('div');
+  row.className = 'af-logos';
+  for (const logo of logos) {
     const img = document.createElement('img');
-    img.className = 'af-logo'; img.src = src; img.alt = alt;
-    img.onerror = () => img.remove();
-    logos.appendChild(img);
+    img.className = logo.invert ? 'af-logo af-logo-invert' : 'af-logo';
+    img.src = logo.src; img.alt = logo.alt;
+    img.onerror = () => img.remove(); // a missing logo should never break the bar
+    row.appendChild(img);
   }
   const name = div('af-brand-name');
-  name.textContent = 'Agentic Factory';
-  bar.append(logos, name);
+  name.textContent = productName;
+  bar.append(row, name);
   return bar;
 }
 function openHelp(host: HTMLElement) {

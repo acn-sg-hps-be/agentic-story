@@ -1,0 +1,17 @@
+{
+  "id": "hdb",
+  "title": "HDB",
+
+  "branding": {
+    "productName": "Agentic Factory",
+    "logos": [
+      { "src": "branding/accenture.svg", "alt": "Accenture", "invert": true },
+      { "src": "branding/hdb.png", "alt": "HDB", "invert": true }
+    ]
+  },
+
+  "scenarios": [
+    { "id": "email", "title": "Email → Ticket + ISO 19650", "path": "scenarios/email/scenario.json" },
+    { "id": "whatsapp", "title": "WhatsApp → Safety Observation", "path": "scenarios/whatsapp/scenario.json" }
+  ]
+}

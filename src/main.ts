@@ -1,8 +1,9 @@
 import './styles.css';
 import { createApp } from './ui/app';
+import { resolveProjectId } from './config';
 
 const mount = document.getElementById('app')!;
-createApp(mount).catch((e) => {
+createApp(mount, resolveProjectId()).catch((e) => {
   mount.innerHTML = '<div class="af-error"><h2>Something went wrong starting the app.</h2></div>';
   console.error(e);
 });

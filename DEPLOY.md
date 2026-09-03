@@ -1,15 +1,25 @@
 # Deploying / publishing the tool
 
 The app is a **static site** — `npm run build` produces a `dist/` folder that
-already contains everything (compiled app + all scenarios, media, logos, and
-`sample.mp4` from `public/`). It's hosted on **GitHub Pages** from a `gh-pages`
-branch, using the [`gh-pages`](https://www.npmjs.com/package/gh-pages) npm tool.
+already contains everything (compiled app + every project's scenarios, media
+and logos, plus `sample.mp4`, from `public/`). It's hosted on **GitHub Pages**
+from a `gh-pages` branch, using the
+[`gh-pages`](https://www.npmjs.com/package/gh-pages) npm tool.
 
 - Repo: `https://github.com/acn-sg-hps-be/agentic-story`
 - Live site: `https://acn-sg-hps-be.github.io/agentic-story/`
 
 `vite.config.ts` sets `base: './'` so asset and fetch URLs are relative and work
 under the Pages project sub-path without hardcoding the repo name.
+
+Every project deploys together, so pick one on the live site with the same query
+parameter you use locally:
+
+- `https://acn-sg-hps-be.github.io/agentic-story/` → the default project
+- `https://acn-sg-hps-be.github.io/agentic-story/?project=<id>` → that project
+
+The query parameter is a client-side read of `location.search`, so it needs no
+Pages configuration or server rewrites.
 
 > It must be served over http(s) (it `fetch()`es its scenario JSON). Opening
 > `dist/index.html` directly via `file://` will not work.

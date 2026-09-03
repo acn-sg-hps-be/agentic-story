@@ -1,13 +1,69 @@
-# Scenario schema
+# Config schema
 
-A scenario is a single JSON file plus a `media/` folder. The engine contains
-**zero story-specific content** — everything about a story lives here. A new
-story needs **no art work**: the primitive library already draws everything;
-you only write config and (optionally) drop in media.
+Two file types: a **project manifest** (one per project) and a **scenario**
+(many per project). The engine contains **zero story-specific content** —
+everything about a story lives here. A new story needs **no art work**: the
+primitive library already draws everything; you only write config and
+(optionally) drop in media.
 
-Scenarios live in `public/scenarios/<id>/scenario.json` and are listed in
-`public/scenarios/index.json`. Media paths are resolved **relative to the
-scenario file**.
+```
+public/projects/<project>/project.json               the manifest
+public/projects/<project>/scenarios/<id>/scenario.json   a scenario
+```
+
+Which project loads comes from `?project=<project>` on the URL, defaulting to
+`DEFAULT_PROJECT` in `src/config.ts`.
+
+# Project manifest (`project.json`)
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | string | ✓ | Should match the folder name. |
+| `title` | string | ✓ | Client / engagement name. |
+| `subtitle` | string | | Optional; not currently rendered. |
+| `branding` | object | | Brand-bar content (see below). |
+| `scenarios` | array | ✓ | Non-empty list of `{ id, title, path }`. |
+
+`scenarios[]`: `path` points at the scenario JSON **relative to the project
+folder**, e.g. `"scenarios/email/scenario.json"`. Array order = dropdown order.
+Each `id` must be unique within the project.
+
+`branding`:
+
+| Field | Type | Req | Notes |
+|---|---|---|---|
+| `productName` | string | | Text beside the logos; defaults to the app's own product name. |
+| `logos` | array | | `{ src, alt, invert? }`, rendered left to right. |
+
+- `src` resolves **relative to the project folder** (`branding/hdb.png`).
+  Absolute URLs and a leading `/` pass through unchanged; `../../branding/x.svg`
+  reaches the shared folder if you prefer one shared copy per file.
+- `invert: true` renders a dark logo white for the purple stage (CSS filter).
+  Omit it for a logo that is already light or must keep its brand colours.
+- A logo whose file fails to load is dropped silently, never breaking the bar.
+
+```jsonc
+{
+  "id": "hdb",
+  "title": "HDB",
+  "branding": {
+    "productName": "Agentic Factory",
+    "logos": [
+      { "src": "branding/accenture.svg", "alt": "Accenture", "invert": true },
+      { "src": "branding/hdb.png", "alt": "HDB", "invert": true }
+    ]
+  },
+  "scenarios": [
+    { "id": "email", "title": "Email → Ticket", "path": "scenarios/email/scenario.json" }
+  ]
+}
+```
+
+# Scenario (`scenario.json`)
+
+A scenario is a single JSON file plus a `media/` folder. Media paths are
+resolved **relative to the scenario file**, so a scenario folder can be moved
+between projects unchanged.
 
 ## Top level
 
@@ -143,5 +199,7 @@ To add a new object type in future, add **one function** to
 - **agent icons**: `eye`, `tag`, `ticket`, `rename`, `link`, `check`, `shield`
 - **avatars**: `worker`, `inspector`, `office`, `person`
 
-The loader validates every scenario on load and reports friendly errors if a
-field is missing or a referenced id / state / primitive does not exist.
+The loader validates the project manifest and every scenario on load, and
+reports friendly errors if a field is missing or a referenced id / state /
+primitive does not exist. An unknown `?project=` shows an error page naming the
+project it could not find.

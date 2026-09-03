@@ -155,3 +155,57 @@ export function validateScenario(data: unknown): ValidationResult {
 
   return { ok: errors.length === 0, errors, warnings };
 }
+
+/**
+ * Validate arbitrary parsed JSON as a project manifest (`project.json`).
+ * Never throws. Same friendly voice as `validateScenario`.
+ */
+export function validateProject(data: unknown): ValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const err = (m: string) => errors.push(m);
+
+  if (!isObj(data)) {
+    return { ok: false, errors: ['The project file is not a JSON object.'], warnings };
+  }
+
+  for (const key of ['id', 'title'] as const) {
+    if (!isStr(data[key])) err(`Missing or invalid "${key}" (expected a string).`);
+  }
+
+  if (!Array.isArray(data.scenarios) || data.scenarios.length === 0) {
+    err('"scenarios" must be a non-empty array of { id, title, path }.');
+  } else {
+    const seen = new Set<string>();
+    data.scenarios.forEach((ref, i) => {
+      const w = `scenarios[${i}]`;
+      if (!isObj(ref)) { err(`${w} must be an object.`); return; }
+      if (!isStr(ref.id)) err(`${w}: missing string "id".`);
+      else if (seen.has(ref.id)) err(`${w}: duplicate id "${ref.id}". Scenario ids must be unique within a project.`);
+      else seen.add(ref.id);
+      if (!isStr(ref.title)) err(`${w}: missing string "title".`);
+      if (!isStr(ref.path)) err(`${w}: missing string "path" (relative to the project folder).`);
+    });
+  }
+
+  if (data.branding !== undefined) {
+    if (!isObj(data.branding)) {
+      err('"branding" must be an object with an optional "productName" and "logos".');
+    } else {
+      const b = data.branding;
+      if (b.productName !== undefined && !isStr(b.productName)) err('branding.productName must be a string.');
+      if (b.logos !== undefined) {
+        if (!Array.isArray(b.logos)) err('branding.logos must be an array of { src, alt }.');
+        else b.logos.forEach((logo, i) => {
+          const w = `branding.logos[${i}]`;
+          if (!isObj(logo)) { err(`${w} must be an object.`); return; }
+          if (!isStr(logo.src)) err(`${w}: missing string "src" (relative to the project folder).`);
+          if (!isStr(logo.alt)) err(`${w}: missing string "alt".`);
+          if (logo.invert !== undefined && typeof logo.invert !== 'boolean') err(`${w}.invert must be true or false.`);
+        });
+      }
+    }
+  }
+
+  return { ok: errors.length === 0, errors, warnings };
+}

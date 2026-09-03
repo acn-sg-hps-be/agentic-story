@@ -14,13 +14,15 @@ framework. It is a presentation tool, not a real integration.
 
 1. **The engine contains zero story-specific content.** Everything about a story
    — inputs, stations, agents, outputs, captions, plots — lives in JSON under
-   `public/scenarios/`. Nothing in `src/engine/**` may mention a domain term
-   (email, WhatsApp, HDB, Autodesk, Forma, etc.).
+   `public/projects/<project>/`. Nothing in `src/engine/**` may mention a domain
+   term (email, WhatsApp, HDB, Autodesk, Forma, etc.). The single exception in
+   the whole of `src/` is `src/config.ts`, which names the **default project**;
+   it sits outside `src/engine/**` for exactly that reason.
 2. **All visuals are code-drawn SVG**, generated in `src/engine/primitives.ts`.
    No 3D models, icon packs, sprite sheets, or stock images. The only external
-   files are (a) optional popup **media** per node/agent and (b) the two logos in
-   `public/branding/`. To add a new object type, add a function in
-   `primitives.ts` — never an asset file.
+   files are (a) optional popup **media** per node/agent and (b) each project's
+   logos under `public/projects/<project>/branding/`. To add a new object type,
+   add a function in `primitives.ts` — never an asset file.
 3. **Fully static + offline-capable.** No backend, no runtime network calls.
    `npm run build` → `dist/` is the whole app. Must be served over http(s)
    (it `fetch()`es its scenario JSON), not opened as `file://`.
@@ -39,10 +41,29 @@ src/engine/     domain-neutral engine
 src/ui/
   app.ts          presentation shell (dropdown, controls, captions, keyboard, help)
   gallery.ts      the object-gallery overlay (shows primitive names)
-public/scenarios/ JSON + media per story  (whatsapp, email, _template) + index.json
-public/branding/  accenture.svg, hdb.svg  (rendered white via CSS filter)
+src/config.ts     app config set before the build: DEFAULT_PROJECT, PROJECTS_ROOT
+public/projects/  one folder per project (client / engagement)
+  hdb/            the current default project
+    project.json    manifest: title, brand-bar logos, list of scenarios
+    branding/       that project's logos
+    scenarios/<id>/ scenario.json + media/
+  _template/      clone this whole folder to start a new project
+public/branding/  shared logo source to copy into a new project
 public/sample.mp4  CC0 video used when a popup has no real media yet
 ```
+
+## Multi-project
+
+One **project** = one folder under `public/projects/` = one client/engagement,
+containing many scenarios. Which project loads comes from the URL:
+
+- `http://localhost:5173/` → `DEFAULT_PROJECT` in `src/config.ts` (`hdb`)
+- `http://localhost:5173/?project=<id>` → `public/projects/<id>/`
+
+An unknown or malformed `?project=` shows a friendly error page. Everything in
+`project.json` (scenario `path`s, logo `src`s) resolves **relative to the
+project folder**; media inside a `scenario.json` still resolves relative to that
+scenario file, so scenario JSONs need no changes when a project moves.
 
 ## Commands
 
@@ -57,7 +78,7 @@ npm run deploy      # build + publish dist/ to the gh-pages branch
 ## Task pointers
 
 - **Configure / author a story** → read [CONFIGURING.md](CONFIGURING.md) and
-  [SCHEMA.md](SCHEMA.md). Only edit `public/scenarios/**`. Never add story
+  [SCHEMA.md](SCHEMA.md). Only edit `public/projects/**`. Never add story
   content to `src/**`.
 - **Publish / deploy** → read [DEPLOY.md](DEPLOY.md).
 - **Change the look / add a primitive** → `src/engine/primitives.ts`, then check
@@ -73,6 +94,8 @@ npm run deploy      # build + publish dist/ to the gh-pages branch
 - **Inputs** are shown by clicking the **avatar**; **outputs** are described
   **per-agent** (there is intentionally **no output popup**).
 - A popup with no real `media` plays `public/sample.mp4` so the slot is testable.
+- The brand bar's logos come from the loaded project's `project.json`; a logo
+  with `"invert": true` is forced white for the dark stage.
 
 ## Verifying changes
 

@@ -1,16 +1,24 @@
 /**
- * gen-placeholders.mjs — generate labelled SVG placeholder media for scenarios
- * whose media paths end in .svg. Reads each scenario.json, collects every media
- * slot, and writes a tasteful colour-card SVG so no popup is blank out of the
- * box. Replace any file with a real screenshot/video of the same name.
+ * gen-placeholders.mjs — generate labelled SVG placeholder media for every
+ * project's scenarios. Walks `public/projects/<id>/project.json`, reads each
+ * scenario it lists, collects every media slot, and writes a tasteful
+ * colour-card SVG so no popup is blank out of the box. Replace any file with a
+ * real screenshot/video of the same name.
  *
- *   node scripts/gen-placeholders.mjs
+ *   node scripts/gen-placeholders.mjs            # every project
+ *   node scripts/gen-placeholders.mjs hdb        # one project
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { dirname, join, basename } from 'node:path';
 
-const ROOT = 'public/scenarios';
-const SCENARIOS = ['email', 'whatsapp'];
+const ROOT = 'public/projects';
+
+/** Project folders to process: the CLI arguments, or every folder with a project.json. */
+const projectIds = process.argv.slice(2).length
+  ? process.argv.slice(2)
+  : readdirSync(ROOT, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && existsSync(join(ROOT, d.name, 'project.json')))
+      .map((d) => d.name);
 
 const collectMedia = (s) => {
   const out = [];
@@ -38,16 +46,31 @@ const card = (label) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64
 </svg>`;
 
 let count = 0;
-for (const id of SCENARIOS) {
-  const dir = join(ROOT, id);
-  const scenario = JSON.parse(readFileSync(join(dir, 'scenario.json'), 'utf8'));
-  for (const rel of collectMedia(scenario)) {
-    if (!rel.endsWith('.svg')) continue;
-    const file = join(dir, rel);
-    mkdirSync(dirname(file), { recursive: true });
-    const label = basename(rel, '.svg').replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-    writeFileSync(file, card(label));
-    count++;
+for (const id of projectIds) {
+  const projectDir = join(ROOT, id);
+  const manifestPath = join(projectDir, 'project.json');
+  if (!existsSync(manifestPath)) {
+    console.warn(`Skipping "${id}": no ${manifestPath}.`);
+    continue;
+  }
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  for (const ref of manifest.scenarios ?? []) {
+    // scenario paths in project.json are relative to the project folder
+    const scenarioPath = join(projectDir, ref.path);
+    if (!existsSync(scenarioPath)) {
+      console.warn(`Skipping "${id}/${ref.id}": no ${scenarioPath}.`);
+      continue;
+    }
+    const dir = dirname(scenarioPath);
+    const scenario = JSON.parse(readFileSync(scenarioPath, 'utf8'));
+    for (const rel of collectMedia(scenario)) {
+      if (!rel.endsWith('.svg')) continue;
+      const file = join(dir, rel);
+      mkdirSync(dirname(file), { recursive: true });
+      const label = basename(rel, '.svg').replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      writeFileSync(file, card(label));
+      count++;
+    }
   }
 }
-console.log(`Wrote ${count} placeholder media files.`);
+console.log(`Wrote ${count} placeholder media files across ${projectIds.length} project(s).`);

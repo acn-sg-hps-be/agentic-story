@@ -115,9 +115,53 @@ export interface LoadedScenario {
   baseUrl: string;
 }
 
-/** Registry entry from scenarios/index.json. */
+/** Registry entry from a project manifest's `scenarios` array. */
 export interface ScenarioRef {
   id: string;
   title: string;
+  /** Path to the scenario JSON, relative to the project folder. */
   path: string;
+}
+
+/** One logo shown in the brand bar. */
+export interface ProjectLogo {
+  /** Path relative to the project folder (absolute URLs pass through). */
+  src: string;
+  alt: string;
+  /**
+   * Render the image white for the dark stage. Set it for a logo that ships
+   * with dark artwork; leave it off for one that is already light or must keep
+   * its own colours.
+   */
+  invert?: boolean;
+}
+
+/** Brand-bar content for one project (chrome, NOT story content). */
+export interface ProjectBranding {
+  /** Product name shown beside the logos; falls back to the app default. */
+  productName?: string;
+  logos?: ProjectLogo[];
+}
+
+/**
+ * A project manifest (`project.json`): which scenarios a project contains and
+ * how its brand bar looks. One project = one folder = one client/engagement.
+ */
+export interface ProjectManifest {
+  id: string;
+  title: string;
+  subtitle?: string;
+  branding?: ProjectBranding;
+  scenarios: ScenarioRef[];
+}
+
+/** A project after loading: its manifest with every path already resolved. */
+export interface LoadedProject {
+  manifest: ProjectManifest;
+  /** Directory URL of project.json; scenario and logo paths resolve against it. */
+  baseUrl: string;
+  /** Scenario refs with `path` resolved to a fetchable URL. */
+  scenarios: ScenarioRef[];
+  /** Logos with `src` resolved to a fetchable URL. */
+  logos: ProjectLogo[];
 }

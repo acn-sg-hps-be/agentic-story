@@ -263,8 +263,11 @@ svg text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 /* Top-left brand bar (two logos + product name) */
 .af-brandbar { position: absolute; top: 18px; left: 22px; z-index: 6; display: flex; align-items: center; gap: 14px; }
 .af-logos { display: flex; align-items: center; gap: 14px; }
-/* logos ship with black text; render them white for the purple stage */
-.af-logo { height: 50px; width: auto; display: block; filter: brightness(0) invert(1); }
+.af-logo { height: 50px; width: auto; display: block; }
+/* opt-in per logo (project.json -> branding.logos[].invert): forces dark
+   artwork white for the purple stage. Logos that are already light, or that
+   must keep their brand colours, simply omit it. */
+.af-logo-invert { filter: brightness(0) invert(1); }
 .af-brand-name {
   font-size: 24px; font-weight: 800; letter-spacing: 1px; color: var(--af-text);
   padding-left: 18px; border-left: 1px solid #ffffff2e;

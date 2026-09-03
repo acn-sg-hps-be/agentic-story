@@ -6,17 +6,39 @@ the task-oriented guide.
 
 ## Where the config lives
 
+Config is grouped by **project** — one project per client / engagement, each
+with its own logos and its own set of demos.
+
 ```
-public/scenarios/
-├─ index.json              registry: which demos appear in the dropdown (+ order)
-├─ whatsapp/scenario.json  a demo
-├─ email/scenario.json     a demo
-│  └─ media/               drop real screenshots/videos here (optional)
-└─ _template/scenario.json starter to clone for a new demo
+public/projects/
+├─ hdb/                      a project
+│  ├─ project.json           title, brand-bar logos, which demos appear (+ order)
+│  ├─ branding/              this project's logos
+│  └─ scenarios/
+│     ├─ email/scenario.json    a demo
+│     │  └─ media/              drop real screenshots/videos here (optional)
+│     └─ whatsapp/scenario.json a demo
+└─ _template/                clone this whole folder to start a new project
 ```
 
 Each entry in the dropdown is **one plot**. A "demo" = a `scenario.json` (one
 plot each, in the current setup).
+
+## Choosing which project to show
+
+Add a `project` query parameter to the URL:
+
+| URL | Loads |
+|---|---|
+| `http://localhost:5173/` | the default project (`hdb`) |
+| `http://localhost:5173/?project=hdb` | `public/projects/hdb/` |
+| `http://localhost:5173/?project=acme` | `public/projects/acme/` |
+
+The same works on the live site: `…github.io/agentic-story/?project=acme`.
+
+The default is the `DEFAULT_PROJECT` constant in **`src/config.ts`** — the one
+place in the app that names a project. Change it and rebuild to switch which
+project a bare URL opens.
 
 ## Preview your edits
 
@@ -84,18 +106,54 @@ Add/remove an object in `stations` (id, label, `transformTo`, `description`,
 Each station's `transformTo` names the state the object becomes there. A step
 may override it with its own `transformTo`.
 
-### Add a whole new demo
-1. Copy `public/scenarios/_template/` to `public/scenarios/<your-id>/`.
+### Add a whole new demo (to an existing project)
+1. Copy an existing scenario folder to
+   `public/projects/<project>/scenarios/<your-id>/`.
 2. Edit its `scenario.json`.
-3. Register it in `public/scenarios/index.json`:
+3. Register it in that project's `project.json`:
    ```jsonc
    { "id": "your-id", "title": "Your title", "path": "scenarios/your-id/scenario.json" }
    ```
    Order in this array = order in the dropdown.
 
 ### Reorder or hide demos
-Reorder (or remove) entries in `index.json`. Removing an entry hides it from the
-dropdown without deleting the folder.
+Reorder (or remove) entries in the project's `scenarios` array. Removing an
+entry hides it from the dropdown without deleting the folder.
+
+### Add a whole new project (a new client)
+1. Copy `public/projects/_template/` to `public/projects/<project-id>/`.
+   Use plain characters in the id — letters, digits, `.`, `-`, `_` — because it
+   goes in the URL.
+2. Drop the client's logo into `<project-id>/branding/` (the template ships a
+   copy of `accenture.svg` plus a `client.svg` placeholder to replace).
+3. Edit `<project-id>/project.json`: `title`, the `logos` array, and the
+   `scenarios` list.
+4. Author the scenarios under `<project-id>/scenarios/`.
+5. Open `http://localhost:5173/?project=<project-id>`.
+
+Nothing else needs touching — no engine code, no rebuild config. To make the new
+project the one a bare URL opens, change `DEFAULT_PROJECT` in `src/config.ts`.
+
+### Change the logos in the brand bar
+Per project, in its `project.json`:
+```jsonc
+"branding": {
+  "productName": "Agentic Factory",
+  "logos": [
+    { "src": "branding/accenture.svg", "alt": "Accenture", "invert": true },
+    { "src": "branding/client.png",    "alt": "Client",    "invert": true }
+  ]
+}
+```
+- `src` resolves **relative to the project folder**. Keeping each project's
+  logos inside its own `branding/` folder makes the folder a self-contained
+  drop-in; if you'd rather share one file across projects, point at the shared
+  copy with `"../../branding/accenture.svg"`.
+- `invert: true` forces a dark logo white for the purple stage. Omit it for a
+  logo that is already light or must keep its brand colours.
+- Any number of logos works; they render left to right. A logo file that fails
+  to load is silently dropped rather than breaking the bar.
+- `productName` is the text beside the logos; omit it to use the app default.
 
 ## Media (screenshots / videos)
 
@@ -111,8 +169,10 @@ of that name into the scenario's `media/` folder.
 
 Generate labelled placeholder images for every `media` path a scenario declares:
 ```bash
-node scripts/gen-placeholders.mjs   # writes .svg placeholders where media points
+node scripts/gen-placeholders.mjs        # every project
+node scripts/gen-placeholders.mjs hdb    # just one project
 ```
+It writes `.svg` placeholders wherever a `media` path points.
 
 ## Step types (plot flow)
 
