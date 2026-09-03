@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir -p public/branding)"
+      "Bash(mkdir -p public/branding)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git checkout *)",
+      "Bash(ls -l ura.png)",
+      "Bash(file ura.png)"
     ]
   }
 }

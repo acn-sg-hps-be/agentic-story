@@ -1,0 +1,17 @@
+{
+  "id": "ura",
+  "title": "Urban Redevelopment Authority",
+  "subtitle": "Atrium at URA — agent use cases",
+
+  "branding": {
+    "productName": "Agentic Development Control",
+    "logos": [
+      { "src": "branding/accenture.svg", "alt": "Accenture", "invert": true },
+      { "src": "branding/ura.png", "alt": "Urban Redevelopment Authority", "invert": true }
+    ]
+  },
+
+  "scenarios": [
+    { "id": "development-application", "title": "Development Application — Submission to Approval", "path": "scenarios/development-application/scenario.json" }
+  ]
+}
