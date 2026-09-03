@@ -40,8 +40,11 @@ collision).
 
 ## Nodes
 
-All nodes are clickable and open a popup with their title, description and one
-media slot. Missing media shows a tasteful placeholder.
+**What is clickable:** only the **avatar** (opens the input popup) and each
+**agent** button (opens that agent's popup). The station towers, the callout
+cards and the outputs are *not* clickable — outputs are covered per-agent and by
+the final "Value Delivered" bar. A popup shows a title, description and one
+media slot; missing media falls back to the bundled `sample.mp4`.
 
 ### `inputs[]`
 | Field | Type | Req | Notes |
@@ -50,6 +53,7 @@ media slot. Missing media shows a tasteful placeholder.
 | `label` | string | ✓ | |
 | `icon` | string | ✓ | A base (`envelope`/`chat`/`card`/`photo`) or icon glyph. |
 | `description` | string | ✓ | Shown in the popup. |
+| `inputFormat` | string | | Optional one-liner shown in the popup as an amber **Input** line. |
 | `media` | string | | Path relative to the scenario, e.g. `media/email.png`. |
 | `startsAs` | string | ✓ | An `objectStates` name. |
 | `persona` | object | | The human who supplies the input (see below). |
@@ -62,24 +66,42 @@ media slot. Missing media shows a tasteful placeholder.
 | `id` | string | ✓ | Unique. |
 | `label` | string | ✓ | e.g. `CAPTURE`. |
 | `agents` | array | ✓ | One or more agents (see below). |
-| `description` | string | ✓ | Station popup text. |
-| `media` | string | | Station popup media. |
+| `description` | string | | Fallback popup text for an agent that has none of its own. |
+| `media` | string | | Fallback popup media for an agent that has none of its own. |
 | `transformTo` | string | ✓ | `objectStates` name applied when the item reaches this station. |
+| `variant` | number | | Tower look `0..3`; defaults to a per-index variant. |
 
-`agents[]`: `{ "name": string, "icon": string, "description"?: string, "media"?: string }`
+`agents[]`: `{ "name": string, "icon": string, "description"?: string, "output"?: string, "media"?: string }`
 - `icon` — one of: `eye`, `tag`, `ticket`, `rename`, `link`, `check`, `shield`.
-- Each agent is **individually clickable**. Its popup uses the agent's own
-  `description`/`media`, falling back to the station's when absent.
+- `output` — optional one-liner shown in the popup as a green **Output** line.
+- Each agent is **individually clickable**, and the popup title is rendered as
+  `"<name> Agent"`. The popup uses the agent's own `description`/`media`,
+  falling back to the station's when absent.
 
 ### `outputs[]`
 | Field | Type | Req | Notes |
 |---|---|---|---|
 | `id` | string | ✓ | Unique. |
-| `label` | string | ✓ | |
+| `label` | string | ✓ | Card **title** in the Value Delivered bar (unless `value` is set). |
 | `icon` | string | ✓ | base or icon glyph. |
-| `description` | string | ✓ | |
+| `value` | string | | Punchier headline that overrides `label` as the card title. |
+| `description` | string | | **Not currently rendered** — see the note below. |
 | `media` | string | | |
 | `fromState` | string | ✓ | `objectStates` name the emitted output is shown in. |
+
+#### The "Value Delivered" bar
+
+Outputs have **no popup**. Instead, as soon as the plot reaches *any*
+`output-emit` step, the subtitle is replaced by a green **Value Delivered** bar
+showing **one card per `output-emit` step** in the plot. Each card is:
+
+- **title** → that output's `value`, falling back to its `label`
+- **body** → the **`caption` of the `output-emit` step**, *not* the output's
+  `description`
+
+> **Gotcha:** `outputs[].description` is not displayed anywhere. To change the
+> wording on a Value Delivered card, edit the **step `caption`** in the plot (and
+> `value`/`label` for the title).
 
 ## `plots[]`
 
@@ -103,7 +125,9 @@ Step types:
 - **`input-appear`** (ref = input) — the item enters in its `startsAs` state.
 - **`move-to`** / **`process`** (ref = station) — the item travels to / is processed
   at the station and morphs to that station's `transformTo` (or the step's override).
-- **`output-emit`** (ref = output) — the item is emitted in the output's `fromState`.
+- **`output-emit`** (ref = output) — the item is emitted in the output's
+  `fromState`, and the **Value Delivered** bar replaces the subtitle. This
+  step's `caption` becomes that output's card body (see above).
 
 Only the nodes a plot references are drawn, so a scenario with many
 inputs/outputs stays clean. Recommended presentation shape: **≤ 6 places, one

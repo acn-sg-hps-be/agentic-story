@@ -51,7 +51,25 @@ Each station has an `agents` array. Each agent:
   "output": "what it produces (one line)" }
 ```
 `icon` is one of: `eye`, `tag`, `ticket`, `rename`, `link`, `check`, `shield`.
-During playback each agent gets its own popup, shown one at a time.
+During playback each agent gets its own popup, shown one at a time. The popup
+title is `"<name> Agent"`, `description` is the body, and `output` renders as a
+green **Output** line.
+
+### Change the "Value Delivered" cards at the end
+The green bar at the end shows **one card per `output-emit` step**. Each card
+takes its:
+- **title** from the output's `value` (or its `label` if `value` is absent)
+- **body** from that `output-emit` **step's `caption`** in the plot
+
+> `outputs[].description` is **not** rendered — editing it changes nothing. To
+> reword a card, edit the step `caption`; to retitle it, edit `value`/`label`.
+
+### Change the "Input" line on the avatar popup
+On an input, `description` is the body and the optional `inputFormat` renders as
+an amber **Input** line:
+```jsonc
+"inputFormat": "Free-text emails with mixed attachments — PDFs and CAD files."
+```
 
 ### Add / remove a station
 Add/remove an object in `stations` (id, label, `transformTo`, `description`,
@@ -103,7 +121,7 @@ node scripts/gen-placeholders.mjs   # writes .svg placeholders where media point
 | `actor-intro` | input | avatar + speech bubble (no popup) |
 | `input-appear` | input | the item enters; input popup available |
 | `move-to` / `process` | station | object travels to / is processed; agent popups |
-| `output-emit` | output | object exits in its final state; final caption |
+| `output-emit` | output | object exits in its final state; the **Value Delivered** bar replaces the subtitle and this step's caption becomes its card body |
 
 ## After you're happy — publish
 
