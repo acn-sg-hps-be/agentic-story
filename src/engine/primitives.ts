@@ -676,7 +676,12 @@ export function calloutCard(
   accent: string = THEME.cyan,
 ): { node: SVGGElement; width: number; height: number } {
   const W = 190, pad = 12, btnGap = 9, lineH = 15, textX = 50;
-  const headBottom = sub ? 46 : 32;      // clear separation below the title
+  // A title too long for one line breaks onto a second rather than overrunning
+  // the card. At font-size 14 with 1px letter-spacing a glyph is ~8.6px wide.
+  const titleLineH = 17;
+  const titleLines = splitLabel(title, Math.max(8, Math.floor((W - pad * 2) / 8.6)));
+  const titleDrop = (titleLines.length - 1) * titleLineH;
+  const headBottom = (sub ? 46 : 32) + titleDrop;  // clear separation below the title
   const startY = headBottom + 4;
   // wrap each "<name> Agent" label to the button's text column; taller buttons
   // when a label needs two lines so nothing overflows.
@@ -688,9 +693,10 @@ export function calloutCard(
   const body: SVGElement[] = [
     rect({ x: 0, y: 0, width: W, height, rx: 12, fill: '#160a2cf2', stroke: accent, 'stroke-opacity': 0.55, 'stroke-width': 1.5 }),
     rect({ x: 0, y: 0, width: 4, height, rx: 2, fill: accent }),
-    text(title, { x: W / 2, y: 22, fill: THEME.text, 'font-size': 14, 'font-weight': 800, 'letter-spacing': 1, 'text-anchor': 'middle' }),
+    ...titleLines.map((ln, i) =>
+      text(ln, { x: W / 2, y: 22 + i * titleLineH, fill: THEME.text, 'font-size': 14, 'font-weight': 800, 'letter-spacing': 1, 'text-anchor': 'middle' })),
   ];
-  if (sub) body.push(text(sub, { x: W / 2, y: 38, fill: THEME.textDim, 'font-size': 12, 'text-anchor': 'middle' }));
+  if (sub) body.push(text(sub, { x: W / 2, y: 38 + titleDrop, fill: THEME.textDim, 'font-size': 12, 'text-anchor': 'middle' }));
 
   let by = startY;
   agents.forEach((a, i) => {
@@ -753,6 +759,25 @@ export function speechBubble(role: string, quote: string, w = 300, tailX = w / 2
 }
 
 /** Naive word-wrap by character budget (offline, no text-measuring needed). */
+/**
+ * Break a short label into at most two BALANCED lines at a word boundary, so
+ * "AAAA & BB CCC" splits as "AAAA &" / "BB CCC" rather than greedily filling
+ * the first line. Returns one line when it already fits, or when there is no
+ * word boundary to break on (a single long word is left to the caller's width).
+ */
+function splitLabel(s: string, maxChars: number): string[] {
+  if (s.length <= maxChars) return [s];
+  const words = s.split(/\s+/);
+  if (words.length < 2) return [s];
+  let at = 1, best = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    // <= prefers the later break, which keeps a trailing "&" off the next line
+    const score = Math.max(words.slice(0, i).join(' ').length, words.slice(i).join(' ').length);
+    if (score <= best) { best = score; at = i; }
+  }
+  return [words.slice(0, at).join(' '), words.slice(at).join(' ')];
+}
+
 function wrapText(s: string, maxChars: number): string[] {
   const words = s.split(/\s+/);
   const lines: string[] = [];

@@ -8,7 +8,11 @@
       "Bash(git commit -m ' *)",
       "Bash(git checkout *)",
       "Bash(ls -l ura.png)",
-      "Bash(file ura.png)"
+      "Bash(file ura.png)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('live productName:',j.branding.productName\\);console.log\\('live title:',j.title\\);console.log\\('scenarios:',j.scenarios.map\\(s=>s.title\\).join\\(', '\\)\\)}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('live stations:',j.stations.map\\(s=>s.label\\).join\\(' | '\\)\\);console.log\\('live agents:',j.stations.flatMap\\(s=>s.agents\\).length\\);console.log\\('live value cards:',j.plots[0].steps.filter\\(x=>x.type==='output-emit'\\).length\\)}\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(tasklist)"
     ]
   }
 }

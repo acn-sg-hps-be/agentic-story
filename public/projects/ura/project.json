@@ -12,6 +12,6 @@
   },
 
   "scenarios": [
-    { "id": "development-application", "title": "Development Application — Submission to Approval", "path": "scenarios/development-application/scenario.json" }
+    { "id": "development-application", "title": "Development Application → Decision", "path": "scenarios/development-application/scenario.json" }
   ]
 }

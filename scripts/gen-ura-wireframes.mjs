@@ -239,7 +239,7 @@ const a2 = () => app('Pre-validation', 'DA/████/25', 'requirement set de
 });
 
 /* ================================================================== A3 === */
-const a3 = () => app('Delta review', 'DA/████/25', 'rev B → rev C · resubmission 2 of 2', (top) => {
+const a3 = () => app('Delta review', 'DA/████/25', 'baseline: previous version · rev B → rev C', (top) => {
   const y = top + 16, LX = 16, LW = 570, RX = 598, RW = 326;
   const tabs = ['By prior issue', 'By artifact', 'Unrequested changes'];
   let tx = LX;
