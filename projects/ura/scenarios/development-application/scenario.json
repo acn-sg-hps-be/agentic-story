@@ -1,7 +1,7 @@
 {
   "id": "development-application",
-  "title": "Development Application — Submission to Approval",
-  "subtitle": "Five stages, eight steps, four friction points, eight agents",
+  "title": "Development Application → Decision",
+  "subtitle": "Demo 1 · URA · CORENET X + DC Assistant",
 
   "objectStates": {
     "submitted":  { "base": "photo" },
@@ -14,29 +14,29 @@
   "inputs": [
     {
       "id": "case-file",
-      "label": "The case, as it reaches the officer",
+      "label": "Development Application",
       "icon": "photo",
-      "description": "A Qualified Person has submitted. What lands on the Processing Officer's desk is not a case — it is a pile of separate records, none of them reconciled.",
-      "inputFormat": "Registration pack, fee invoice and receipt, lodged file set, federated model, survey plan, prior issues and the QP's response letter.",
-      "media": "media/case-file.svg",
+      "media": "media/Input.png",
+      "description": "A registration pack, a fee receipt, a lodged file set and a coordinated model arrive across separate systems — and on a resubmission, every one of them is re-read by hand.",
+      "inputFormat": "Registration pack and area schedule, fee invoice and receipt, lodged file set, federated model, and the QP's written response to prior issues.",
       "startsAs": "submitted",
       "persona": {
-        "role": "Processing Officer (PO)",
-        "quote": "Every case starts with me rebuilding its history out of four systems and somebody's inbox.",
+        "role": "URA Processing Officer",
+        "quote": "Every case starts with me rebuilding its history out of several systems and somebody's inbox — before I can even begin evaluating it.",
         "avatar": "office"
       }
     },
     {
       "id": "recommendation-pack",
-      "label": "What reaches the Approving Officer",
+      "label": "Recommendation for Approval",
       "icon": "card",
-      "description": "At step 7 the Approving Officer gets a recommendation — and to test it, re-reads the case the PO has already read. Selecting the outcome is the statutory determination, and stays entirely theirs.",
-      "inputFormat": "The PO's recommendation and formal issues, machine findings with their overrides and stated reasons, consultation replies, precedent.",
       "media": "media/recommendation-pack.svg",
+      "description": "The processing officer's recommendation arrives with its findings, overrides and consultation replies spread across the same records the officer has already worked through.",
+      "inputFormat": "The recommendation and formal issues, machine findings with their overrides and stated reasons, consultation replies, and prior decisions.",
       "startsAs": "evaluated",
       "persona": {
-        "role": "Approving Officer (AO)",
-        "quote": "I re-check what the officer already checked, because I cannot see what their conclusion rests on.",
+        "role": "URA Approving Officer",
+        "quote": "I re-check the evidence and the model detail the officer already reviewed, because nothing shows me what their conclusion actually rests on.",
         "avatar": "inspector"
       }
     }
@@ -47,15 +47,15 @@
       "id": "submission-setup",
       "label": "SUBMISSION & CASE SETUP",
       "transformTo": "registered",
-      "description": "Steps 1–3. Lodge, publish, register and route. One agent on the registration and fee checks.",
       "media": "media/submission-setup.svg",
+      "description": "Registers the application, routes the case, and checks the payment against the fee guideline.",
       "agents": [
         {
-          "name": "A1 Registration & Fee Verification",
+          "name": "A1 Registration and Fee Verification",
           "icon": "ticket",
-          "description": "Background agent. Reconciles three accounts of one payment — what the guideline says is due, what the invoice charged, what the receipt settled — and names the difference in a sentence the officer can act on.",
-          "output": "Fee due beside fee paid, the provision it was derived from named, every line opening its source page. Readable in five seconds, checkable in thirty.",
-          "media": "media/a1-registration-fee.svg"
+          "media": "media/Agent1.png",
+          "description": "Reads the registration pack and the payment record, works out what was due from the fee guideline, and reports any shortfall.",
+          "output": "Fee checked: amount due, amount paid, and the provision applied."
         }
       ]
     },
@@ -63,15 +63,15 @@
       "id": "pre-validation",
       "label": "PRE-VALIDATION",
       "transformTo": "validated",
-      "description": "Step 4. Validate the model and run the DC Assistant checks. The checks themselves stay untouched — they already work. One agent sits on top of them.",
       "media": "media/pre-validation.svg",
+      "description": "Reads the automated model check output against what this submission was required to contain. The checks themselves are left untouched.",
       "agents": [
         {
-          "name": "A2 Submission Completeness & Geo-Reference Validation",
+          "name": "A2 Submission Completeness and Geo-Reference Validation",
           "icon": "check",
-          "description": "Background agent. Derives the document set this submission actually requires, works out what each lodged file really is, then diagnoses why the geo-reference failed — wrong datum, misplaced survey point, wrong lot, rotated model.",
-          "output": "Two panels for two questions: is it complete, and is it in the right place. The requirement list names the circular it came from, so the scoping can be challenged — not just the result.",
-          "media": "media/a2-completeness-georef.svg"
+          "media": "media/Agent2.png",
+          "description": "Works out what this submission was required to contain, matches the lodged files against it, and confirms the model is geo-referenced to the registered site.",
+          "output": "One completeness verdict, plus a diagnosis of any geo-reference failure."
         }
       ]
     },
@@ -79,36 +79,36 @@
       "id": "evaluation",
       "label": "EVALUATION",
       "transformTo": "evaluated",
-      "description": "Steps 5–6. Review results, site history and consultations; consult other departments and agencies; formalise issues and recommend. The largest concentration of human steps in the workflow.",
       "media": "media/evaluation.svg",
+      "description": "Compares what changed, routes the referrals, retrieves the site's history, and consolidates every comment into formal issues.",
       "agents": [
         {
           "name": "A3 Submission Delta Review",
           "icon": "rename",
-          "description": "Interactive agent, fires on a resubmission. Only the model delta diffs cleanly — drawings, narrative and the response letter are prose no tool compares. The reconciliation is the answer, not the change list.",
-          "output": "Per prior issue: addressed, persisting, or not answered — plus what changed that nobody asked for. A contradiction between document and model is the finding that pays, because today it is found by accident.",
-          "media": "media/a3-delta-review.svg"
+          "media": "media/Agent3.png",
+          "description": "Compares this submission against the previous version — or against the scheme already approved on the site — and reports what changed against each prior issue.",
+          "output": "Every prior issue marked: addressed, persisting, or never answered."
         },
         {
-          "name": "A4 Referral & Special Control",
+          "name": "A4 Referral and Special Control",
           "icon": "tag",
-          "description": "Background agent. Not unstructured data — a variable path. Which internal team and which agency should see this case, and for which issue. The same site engages conservation but not urban design, depending on what is proposed.",
-          "output": "A routing proposal with a send button, not a notification — and a 'considered and not referred' list with reasons. Advisory only: nothing leaves URA until a person sends it.",
-          "media": "media/a4-referral-control.svg"
+          "media": "media/Agent4.png",
+          "description": "Proposes which internal teams and which external agencies should see this case, and for which issue, against URA's routing guidance and the controls on the site.",
+          "output": "A referral list you send — with what it ruled out, and why."
         },
         {
           "name": "A5 Site Precedent Retrieval",
           "icon": "link",
-          "description": "Hybrid agent — a background pre-brief, then chat. Answers 'have we seen this before, and what did we decide' — which nothing today can be asked. The archive is retrieve-by-reference: you need the case number to find the case.",
-          "output": "Cards, not search results, because the useful unit is a decision with its grounds attached: the outcome, the grounds, the condition imposed, whether it was appealed.",
-          "media": "media/a5-precedent-retrieval.svg"
+          "media": "media/Agent5.png",
+          "description": "Retrieves approved uses, enforcement history and previous decisions for the site from the case and document records, then answers follow-up questions about them.",
+          "output": "Comparable decisions with their grounds, conditions, and source references."
         },
         {
           "name": "A6 Issue Consolidation",
           "icon": "ticket",
-          "description": "Interactive agent. Four vocabularies for one physical concern, with no shared field between them. It clusters by meaning, then does the harder thing — names the conflicts where two requirements cannot both be met.",
-          "output": "A board in three states: raw, clustered, needs a human. Every original comment stays in its own words and attributed. It surfaces a conflict; it must never resolve one.",
-          "media": "media/a6-issue-consolidation.svg"
+          "media": "media/Agent6.png",
+          "description": "Groups related findings from the rule checks, internal teams, external agencies and email, removes the duplicates, and drafts the consolidated issues for the case record.",
+          "output": "Clustered issues drafted for your edit — conflicts named, never resolved."
         }
       ]
     },
@@ -116,22 +116,22 @@
       "id": "ao-approval",
       "label": "AO APPROVAL",
       "transformTo": "assured",
-      "description": "Step 7. The Approving Officer reviews the recommendation, the evidence and the overrides. The only stage with no automation at all today.",
       "media": "media/ao-approval.svg",
+      "description": "Assembles the case for the Approving Officer and checks that every finding and override traces to a real source.",
       "agents": [
         {
           "name": "A7 AO Briefing Pack",
           "icon": "eye",
-          "description": "Interactive agent. Answers 'what do I need to know before I look at this properly?' Breadth: what is proposed, what the site carries, what was found, who was consulted, what the PO recommends and why — every line cited.",
-          "output": "A document read top to bottom, with counts in the header and full lists always linked — because the failure mode of a summary is the thing it left out.",
-          "media": "media/a7-ao-briefing.svg"
+          "media": "media/Agent7.png",
+          "description": "Assembles one cited document that orients the Approving Officer — what is proposed, what the site carries, what was found, who was consulted, and what the officer recommends.",
+          "output": "A sectioned pack, every line linked — with counts showing what it left out."
         },
         {
-          "name": "A8 Evidence & Override Assurance",
+          "name": "A8 Evidence and Override Assurance",
           "icon": "shield",
-          "description": "Interactive agent. Answers 'can I rely on what I am being told?' Depth on one thing: every point a human departed from the machine result. Machine finding, override, stated reason and cited evidence, side by side.",
-          "output": "A matrix you sort and drill into. It reports completeness, never merits — 'this override cites a note that cannot be located' is a fact; whether it is justified stays with the AO.",
-          "media": "media/a8-evidence-assurance.svg"
+          "media": "media/Agent8.png",
+          "description": "Takes every point where an officer overrode a machine finding, and checks whether the reason given cites evidence that can actually be found.",
+          "output": "Citation coverage: what traces to a real source — completeness, never merits."
         }
       ]
     }
@@ -140,48 +140,45 @@
   "outputs": [
     {
       "id": "intake-settled",
-      "label": "Verified intake",
+      "label": "Intake Checks Reconciled",
       "icon": "photo",
-      "value": "Intake settled at the front door",
-      "description": "Friction point 1 closed: registration, payment, files and geo-reference reconciled before evaluation begins.",
       "media": "media/out-intake.svg",
-      "fromState": "validated"
+      "fromState": "validated",
+      "description": "Registration, payment, files and geo-reference arrive as one verdict instead of separate records in separate systems."
     },
     {
       "id": "coordination-captured",
-      "label": "Coordinated case",
+      "label": "Coordination On the Record",
       "icon": "card",
-      "value": "Coordination captured, not emailed",
-      "description": "Friction point 2 closed: referrals, precedent and conflicting comments live in the record instead of an inbox.",
       "media": "media/out-coordination.svg",
-      "fromState": "evaluated"
+      "fromState": "evaluated",
+      "description": "Referrals, site history and agency comments live in the case record rather than an inbox."
     },
     {
       "id": "traceable-decision",
-      "label": "Traceable decision",
+      "label": "Decision Traceability",
       "icon": "card",
-      "value": "A decision that can be traced",
-      "description": "Friction points 3 and 4 closed: the AO verifies instead of reconstructing, and the reasoning resolves to real sources.",
       "media": "media/out-decision.svg",
-      "fromState": "assured"
+      "fromState": "assured",
+      "description": "Every finding and override traces to a real source, and the outcome stays the officer's decision."
     }
   ],
 
   "plots": [
     {
       "id": "main",
-      "name": "Development Application — Submission to Approval",
+      "name": "Development Application → Decision",
       "steps": [
-        { "type": "actor-intro",  "ref": "case-file",             "caption": "The Processing Officer picks up the case. Fee, files and geo-reference each sit in a different record — and on a resubmission, the whole set is re-read by hand.", "dwell": 4600 },
-        { "type": "actor-intro",  "ref": "recommendation-pack",   "caption": "Downstream, the Approving Officer re-checks evidence the PO has already reviewed — because the link from findings and overrides to the recommendation is hard to trace.", "dwell": 4600 },
-        { "type": "input-appear", "ref": "case-file",             "caption": "The case enters the line the way it actually arrives: unreconciled, spread across systems, the reasoning still in people's heads and inboxes.", "dwell": 3000 },
-        { "type": "process",      "ref": "submission-setup",      "caption": "Submission and case setup. A1 reconciles what is due, what was charged and what was paid — and names where the difference arises.", "dwell": 4600 },
-        { "type": "process",      "ref": "pre-validation",        "caption": "Pre-validation. The model and rule checks already work, so they stay untouched. A2 sits on top of them: it derives the required document set and diagnoses why the geo-reference failed.", "dwell": 5400 },
-        { "type": "process",      "ref": "evaluation",            "caption": "Evaluation — the largest concentration of human steps. A3 on the resubmission, A4 on referrals, A5 on precedent, A6 on the conflicting comments.", "dwell": 5800 },
-        { "type": "process",      "ref": "ao-approval",           "caption": "AO approval. A7 assembles the briefing pack and shows its own gaps. A8 audits whether each finding and override resolves to a real source. The AO verifies instead of reconstructing.", "dwell": 5400 },
-        { "type": "output-emit",  "ref": "intake-settled",        "caption": "A1 and A2 turn four separate checks into one verdict — fee, files and geo-reference, each line opening its source.", "dwell": 4200 },
-        { "type": "output-emit",  "ref": "coordination-captured", "caption": "A4, A5 and A6 put referrals, precedent and conflicts in the record — advisory, attributed, and never resolved on the agent's own authority.", "dwell": 4200 },
-        { "type": "output-emit",  "ref": "traceable-decision",    "caption": "A7 and A8 let the AO verify rather than reconstruct. Selecting the outcome carries no agent by design — it is the statutory determination.", "dwell": 5600 }
+        { "type": "actor-intro",  "ref": "case-file",             "caption": "A URA processing officer rebuilds each case from several systems — registration, payment, files, and the model — before evaluation can even start.", "dwell": 3800 },
+        { "type": "actor-intro",  "ref": "recommendation-pack",   "caption": "Downstream, the approving officer re-checks the same evidence, because nothing shows what the recommendation rests on.", "dwell": 3600 },
+        { "type": "input-appear", "ref": "case-file",             "caption": "A development application arrives — registration pack, fee receipt, lodged files, and a coordinated model.", "dwell": 2800 },
+        { "type": "process",      "ref": "submission-setup",      "caption": "The Registration and Fee Verification Agent reads the registration and payment records and reports the shortfall against the guideline.", "dwell": 2800 },
+        { "type": "process",      "ref": "pre-validation",        "caption": "The Submission Completeness Agent derives what was required, matches the lodged files, and diagnoses the geo-reference failure.", "dwell": 3000 },
+        { "type": "process",      "ref": "evaluation",            "caption": "Delta Review, Referral, Site Precedent and Issue Consolidation Agents evaluate the case and draft the formal issues.", "dwell": 3600 },
+        { "type": "process",      "ref": "ao-approval",           "caption": "The AO Briefing Pack Agent assembles the cited case; the Evidence and Override Assurance Agent checks every override traces to a source.", "dwell": 3200 },
+        { "type": "output-emit",  "ref": "intake-settled",        "caption": "Registration, payment, files and geo-reference reconciled into a single verdict — every line opening its own source.", "dwell": 2800 },
+        { "type": "output-emit",  "ref": "coordination-captured", "caption": "Referrals, site history and agency comments captured in the record — drafted for the officer to send.", "dwell": 3000 },
+        { "type": "output-emit",  "ref": "traceable-decision",    "caption": "Every finding and override traces to a real source — and selecting the outcome stays the officer's decision.", "dwell": 4200 }
       ]
     }
   ]
