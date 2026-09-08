@@ -83,17 +83,17 @@
       "description": "Compares what changed, routes the referrals, retrieves the site's history, and consolidates every comment into formal issues.",
       "agents": [
         {
-          "name": "A3 Submission Delta Review",
+          "name": "A3 Submission Delta & Special Control Review",
           "icon": "rename",
           "media": "media/Agent3.png",
-          "description": "Compares this submission against the previous version — or against the scheme already approved on the site — and reports what changed against each prior issue.",
-          "output": "Every prior issue marked: addressed, persisting, or never answered."
+          "description": "Compares this submission against the previously submitted or approved version and reports what changed against each prior issue. Also checks against any special site controls or TCOT conditions imposed.",
+          "output": "Every prior issue marked: addressed, persisting, or never answered. Also populates a list containing special site controls to be noted of -- with potential non-compliant issues."
         },
         {
-          "name": "A4 Referral and Special Control",
+          "name": "A4 Referral Consultations",
           "icon": "tag",
           "media": "media/Agent4.png",
-          "description": "Proposes which internal teams and which external agencies should see this case, and for which issue, against URA's routing guidance and the controls on the site.",
+          "description": "Proposes which internal teams and which external agencies should see this case, and for which issue, against URA's routing guidance for the site.",
           "output": "A referral list you send — with what it ruled out, and why."
         },
         {
